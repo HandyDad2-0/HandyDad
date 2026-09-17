@@ -40,9 +40,20 @@ Step-by-step, for the initial manual-entry flow:
 - Pass/fail-style fit result per project
 - List of specific complications with plain-language explanations (not just "fails")
 
-## Stretch (Capstone II)
+## Stretch (Capstone II): AR-Based Measurement
 
-- AR-based measurement (ARKit/ARCore or WebXR) to replace manual entry — see the "Resolve open question: how far to take AR measurement" Trello card for the feasibility writeup and recommendation to cut this from MVP.
+Feasibility (from Trello card "Resolve open question: how far to take AR measurement"):
+
+- **ARKit (iOS):** Plane detection + hit-testing available on all modern iPhones; LiDAR-equipped iPhones/iPads (Pro models) add scene geometry scanning with ~1-2cm accuracy. Apple's own "Measure" app is a working reference for what's achievable.
+- **ARCore (Android):** Comparable plane detection, plus a Depth API on supported devices. Google's "Measure" app is the equivalent reference.
+- **WebXR:** The only option that stays inside our current web stack (no native app needed), but support is inconsistent — Safari/iOS WebXR support is limited, measurement accuracy is rougher than native ARKit/ARCore, and it would still need a manual-entry fallback for unsupported devices.
+
+The catch: HandyDad is spec'd as a responsive React web app (System Requirements, Requirements doc). Native ARKit/ARCore would mean building and maintaining separate iOS/Android apps — a real scope jump beyond what's planned for Capstone I or II. WebXR avoids that but trades away accuracy and reliability, and safety-relevant checks (load-bearing, slope) would still need a manual confirmation step regardless.
+
+**Recommendation: cut from MVP, keep as a Capstone II stretch goal.**
+- Manual dimension entry (already spec'd as F2/R3) fully covers the core flow.
+- No current team bandwidth is scoped for native mobile development.
+- If revisited, WebXR is the more realistic starting point than native ARKit/ARCore, given the web-only stack.
 
 ## Open questions
 

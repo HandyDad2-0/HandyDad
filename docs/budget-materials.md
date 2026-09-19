@@ -48,10 +48,12 @@ A separate lookup table, independent of any single project, keyed by `category` 
 
 | Category | Pine ($/unit) | Cedar ($/unit) | Composite ($/unit) |
 |---|---|---|---|
-| framing (linear_ft) | 0.65 | 1.85 | 2.10 |
-| decking (linear_ft) | 1.10 | 3.25 | 4.50 |
+| framing (linear_ft) | 0.50 | 1.85 | 2.10 |
+| decking (linear_ft) | 0.95 | 3.25 | 4.50 |
 
 Non-tiered categories (fasteners, hardware, finish) use a single flat price regardless of tier. This table lives separately from project data so prices can be updated without touching every project record.
+
+Pine framing is sourced (Home Depot, 2 in. x 4 in. x 96 in. #2 Premium Grade KD-HT Stud, $3.98/8ft = $0.50/linear ft, priced Sep 19, 2026). Pine decking is sourced (Home Depot, WeatherShield 5/4 in. x 6 in. x 16 ft. Pressure-Treated Southern Yellow Pine Decking, $15.18/16ft = $0.95/linear ft, priced Sep 19, 2026). Cedar (framing and decking) and composite decking figures are still estimates pending sourcing.
 
 ## 4. Computation Flow
 

@@ -79,7 +79,7 @@ Currently in **Capstone I, Sprint 0** — establishing scope, requirements, and 
 Setup instructions will be added once the initial project scaffold is in place.
 
 ```bash
-git clone https://github.com/nichonmarshall-cyber/HandyDad.git
+git clone https://github.com/HandyDad2-0/HandyDad.git
 cd HandyDad
 ```
 

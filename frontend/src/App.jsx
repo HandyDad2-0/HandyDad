@@ -3,6 +3,9 @@ import ProjectLibrary from "./screens/ProjectLibrary.jsx";
 import ProjectDetail from "./screens/ProjectDetail.jsx";
 import EnterDimensions from "./screens/EnterDimensions.jsx";
 import SpaceCheckResults from "./screens/SpaceCheckResults.jsx";
+import MonthlyChallenge from "./screens/MonthlyChallenge.jsx";
+
+const LIBRARY_SCREENS = ["library", "detail", "dimensions", "results"];
 
 // Simple state-based navigation for the scaffold — no router dependency
 // yet. Swap for react-router (or similar) once there are enough screens
@@ -16,7 +19,20 @@ export default function App() {
         <div className="brand">
           <span>🏠</span> HandyDad
         </div>
-        <nav style={{ fontSize: 14, color: "var(--text-muted)" }}>MVP Frontend Scaffold</nav>
+        <nav className="nav-tabs">
+          <button
+            className={`nav-tab ${LIBRARY_SCREENS.includes(screen.name) ? "active" : ""}`}
+            onClick={() => setScreen({ name: "library" })}
+          >
+            Project Library
+          </button>
+          <button
+            className={`nav-tab ${screen.name === "challenge" ? "active" : ""}`}
+            onClick={() => setScreen({ name: "challenge" })}
+          >
+            Monthly Challenge
+          </button>
+        </nav>
       </header>
 
       {screen.name === "library" && (
@@ -46,6 +62,8 @@ export default function App() {
           onEditDimensions={() => setScreen({ name: "dimensions", projectId: screen.projectId })}
         />
       )}
+
+      {screen.name === "challenge" && <MonthlyChallenge />}
     </div>
   );
 }

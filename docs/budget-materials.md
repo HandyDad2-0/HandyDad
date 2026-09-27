@@ -48,12 +48,18 @@ A separate lookup table, independent of any single project, keyed by `category` 
 
 | Category | Pine ($/unit) | Cedar ($/unit) | Composite ($/unit) |
 |---|---|---|---|
-| framing (linear_ft) | 0.50 | 1.85 | 2.10 |
-| decking (linear_ft) | 0.95 | 3.25 | 4.50 |
+| framing (linear_ft) | 0.50 | 1.85 *(est.)* | 2.10 *(est.)* |
+| decking (linear_ft) | 0.95 | 3.89 | 2.00 |
 
 Non-tiered categories (fasteners, hardware, finish) use a single flat price regardless of tier. This table lives separately from project data so prices can be updated without touching every project record.
 
-Pine framing is sourced (Home Depot, 2 in. x 4 in. x 96 in. #2 Premium Grade KD-HT Stud, $3.98/8ft = $0.50/linear ft, priced Sep 19, 2026). Pine decking is sourced (Home Depot, WeatherShield 5/4 in. x 6 in. x 16 ft. Pressure-Treated Southern Yellow Pine Decking, $15.18/16ft = $0.95/linear ft, priced Sep 19, 2026). Cedar (framing and decking) and composite decking figures are still estimates pending sourcing.
+**Sourcing status (updated Sep 26, 2026):**
+- Pine framing: sourced (Home Depot, 2 in. x 4 in. x 96 in. #2 Premium Grade KD-HT Stud, $3.98/8ft = $0.50/linear ft, priced Sep 19, 2026).
+- Pine decking: sourced (Home Depot, WeatherShield 5/4 in. x 6 in. x 16 ft. Pressure-Treated Southern Yellow Pine Decking, $15.18/16ft = $0.95/linear ft, priced Sep 19, 2026).
+- Cedar decking: sourced (Home Depot, 1 in. x 6 in. x 8 ft. S1S2E Cedar Board 5-Pack, model WRC168T5PK, $155.40/5 boards = $31.08/board / 8ft = $3.89/linear ft, priced Sep 26, 2026).
+- Composite decking: sourced (Home Depot, Trex Enhance Basics "Saddle" Grooved, 1 in. x 6 in. x 16 ft., $31.98/16ft = $2.00/linear ft — cheapest genuine Trex composite board found; priced Sep 26, 2026).
+- **Cedar framing: still an estimate.** Home Depot and Lowe's both load 2x4 cedar pricing dynamically (JavaScript), so it isn't retrievable by automated lookup the way the decking prices were — same issue flagged for pine before a screenshot resolved it. Needs an in-store or logged-in screenshot to confirm.
+- **Composite framing: still an estimate, and worth a team decision, not just a pricing lookup.** Composite/plastic-lumber products are sold as decking, not as structural framing lumber — no real retail product for "composite 2x4 framing" was found. Worth deciding as a team whether the composite tier should use pine or cedar framing underneath (with only the decking swapped to composite), rather than assuming a composite framing price exists.
 
 ## 4. Computation Flow
 

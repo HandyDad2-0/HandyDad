@@ -14,9 +14,20 @@ export const TIERS = ["pine", "cedar", "composite"];
  * Only "tiered" categories need entries here. Update this table to
  * change pricing without touching any project's BOM data.
  */
+// Sourcing status (see docs/budget-materials.md for citations):
+//   framing.pine    - sourced, Home Depot, priced Sep 19, 2026
+//   framing.cedar   - ESTIMATE, pending sourcing (price loads via JS on
+//                     both Home Depot and Lowe's, not retrievable by
+//                     automated lookup; needs an in-store/screenshot check)
+//   framing.composite - ESTIMATE, and possibly not a real product at all —
+//                     composite lumber is sold as decking, not structural
+//                     framing. Flag for team decision.
+//   decking.pine    - sourced, Home Depot, priced Sep 19, 2026
+//   decking.cedar   - sourced, Home Depot, priced Sep 26, 2026
+//   decking.composite - sourced, Home Depot (Trex Enhance Basics), priced Sep 26, 2026
 export const PRICE_CATALOG = {
-  framing: { pine: 0.50, cedar: 1.85, composite: 2.10 }, // $/linear_ft
-  decking: { pine: 0.95, cedar: 3.25, composite: 4.50 }, // $/linear_ft
+  framing: { pine: 0.50, cedar: 1.85, composite: 2.10 }, // $/linear_ft — cedar/composite still estimates, see above
+  decking: { pine: 0.95, cedar: 3.89, composite: 2.00 }, // $/linear_ft
 };
 
 /**

@@ -61,6 +61,8 @@ Right now each seed project has its own $ range per tier (e.g. Sandbox: $40–60
 
 Proposal: keep the hand-estimated range temporarily as a `budget_estimate_reference` field (clearly labeled as a rough sanity check, not the number the UI shows), and drop it once every seed project has a real `materials` array and the computed numbers are validated against it.
 
+**Update (Sep 26, 2026):** All 8 seed projects now have a real `materials` array (Sprint 1). Running all 8 through the pricing engine, the computed totals diverge substantially from Austin's original `budget_estimate_reference` ranges — in most cases computed comes in lower, occasionally higher, with no consistent direction. This isn't a sign the new BOMs are wrong; the Simple Playhouse (the original, already-merged worked example) shows the same divergence Razee flagged when it was first built (computed pine total ~$97 vs. a $300–400 reference range). The estimate ranges were built without real pricing data, so treating them as ground truth doesn't make sense anymore now that computed numbers exist for every project. **Recommendation: drop `budget_estimate_reference` from the schema and let the UI show only the computed tier totals**, per the condition this doc already set for retiring it. Worth a quick team confirmation before removing the field from the data, since it affects what Austin's content shows.
+
 ## Applying this to the current 8 seed projects
 
 Footprint and clearance convert directly from Austin's existing text (no new research needed, just reshaping):

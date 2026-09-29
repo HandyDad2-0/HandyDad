@@ -28,15 +28,17 @@ The frontend should show `message` as an unavailable state, never display `answe
 
 Run locally from `backend/` with `npm install && npm start`, then call the endpoint with the sample JSON above. Run `npm test` for the contract checks.
 
-## “Describe Your Own Idea” overlap and ownership proposal
+## “Describe Your Own Idea” overlap and ownership
 
-The idea screen accepts a free-text description and finds matching projects in the catalog. Q&A accepts a question **after a project is selected** and eventually grounds an answer in that project's approved data. The two flows both interpret free text and retrieve project data, but have different outputs and safety requirements. A search match percentage should not be presented as a verified build or safety answer.
+Nicholas Marshall is the confirmed owner of the proposed Sprint 1 “Describe Your Own Idea” feature. The feature is not in the submitted Requirements document. A user enters a free-text project description and sees similar existing projects with a match percentage, or a path to create a fully custom project if no match fits. The Idea Results artboard is linked from the sprint card.
 
-Proposed split for team confirmation:
+This overlaps with Q&A because both interpret free text and retrieve project data. Their outputs differ: idea search matches a description to catalog entries; Q&A accepts a question **after a project is selected** and eventually grounds an answer in approved data for that project. A match percentage is a discovery score, not a verified build or safety answer. Do not route idea search through the Q&A stub.
 
-- Shaket (frontend and UX): idea input and results screens.
-- Austin (project library and rules): catalog matching, match criteria, and a no-match result.
-- Nicholas (Q&A): advise on reusable question normalization and project retrieval boundaries; own `POST /api/qa/questions`. Do not route idea search through this Q&A stub.
-- Team: confirm who owns a separate idea-search API, how a custom-build entry point works, and whether the match percentage can be explained and tested. Monthly challenge submissions are a separate flow.
+Coordination needed before implementation:
 
-This is a proposal, not a decision or implemented idea-search feature.
+- Nicholas owns the feature and should coordinate project data access with Austin, who owns the Project Library data.
+- Align the input and results screens with Shaket's frontend work and the approved wireframe.
+- Define how matches and percentages are calculated and what happens when there is no suitable match.
+- Define where the fully custom project path goes and what data it saves. It should not silently create a Monthly Build Challenge submission.
+
+The feature is not implemented by the Q&A API stub in this change.

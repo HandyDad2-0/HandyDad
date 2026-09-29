@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "HandyDad backend services. Currently just the Monthly Build Challenge API (submissions, voting, monthly reset). The materials-engine.js module in this folder is a plain library, imported directly by the frontend — it has no server of its own.",
+  "description": "HandyDad backend services: Monthly Build Challenge API and Sprint 1 Q&A interface stub. The materials-engine.js module is a plain library imported by the frontend.",
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",

@@ -1,16 +1,31 @@
 // Dimension-Fit Rules Engine
 // Owner: Anish Jaiswal
 //
-// Checks a chosen project's footprint/clearance against the user's
-// entered space, and raises plain-language complications for slope,
-// load-bearing risk, and known obstacles. See docs/space-measurement.md
-// for the full input flow and the rationale behind each rule.
+// Implements Austin's "Basic Safety/Complication Flagging Rules — First
+// Draft" (docs/Basic Safety Complication Flagging Rules — First Draft.docx)
+// against the user's entered space, plus one additional advisory
+// (attached-to-structure / load-bearing) from docs/space-measurement.md
+// that isn't in Austin's four-rule draft yet.
+//
+// Resolved with Austin: this module is the single implementation of the
+// flagging rules — his doc is the spec, not a separate code path. Key
+// behavior per his spec (different from this module's first draft):
+// none of these checks block the user from seeing the materials list.
+// Rule 1/2 ("blocking" severity) means "shown as a red flag", not
+// "stop the flow" — S-06 always renders, flags or no flags.
 //
 // NOTE: project.footprint.*_ft / clearance_ft are stored directly in
-// feet in data/seed-projects.json, not converted to a single internal
-// base unit (centimeters) as docs/space-measurement.md's units decision
-// specifies. Flagged on PR #6's review — not yet resolved upstream, so
-// this engine reads the schema as it currently exists on disk.
+// feet in data/seed-projects.json, not a single internal base unit (cm)
+// as docs/space-measurement.md's units decision specifies. Flagged on
+// PR #6's review, still unresolved upstream — this engine reads the
+// schema as it currently exists on disk.
+
+const OBSTACLE_LABELS = {
+  slope: "slope",
+  tree: "tree",
+  fence_line: "fence line",
+  utility_lines: "utility lines",
+};
 
 /**
  * @param {Object} project - a project from data/seed-projects.json
@@ -18,79 +33,87 @@
  * @param {number} input.length_ft
  * @param {number} input.width_ft
  * @param {number} input.clearance_ft
+ * @param {number|null} [input.entered_height_ft] - only meaningful when the
+ *   project has a max_unassisted_height_ft threshold (Rule 3)
  * @param {boolean} input.sloped
  * @param {boolean} input.attachedToStructure
  * @param {boolean} input.hasTree
  * @param {boolean} input.hasFenceLine
  * @param {boolean} input.hasUtilityLines
- * @returns {{ fits: boolean, complications: string[] }}
+ * @returns {{ flags: Array<{ rule: string, severity: "blocking"|"advisory"|"advisory-strong", text: string }>, hasBlockingFlags: boolean }}
  */
 export function checkFit(project, input) {
+  const flags = [];
+
+  // Rule 3 - No Engineer Needed. Shown first: lower severity than Rules 1/2
+  // but the highest safety stakes, per Austin's proposed ordering.
+  const heightExceedsThreshold =
+    project.max_unassisted_height_ft != null &&
+    input.entered_height_ft != null &&
+    input.entered_height_ft > project.max_unassisted_height_ft;
+  if (project.engineer_review_required || heightExceedsThreshold) {
+    flags.push({
+      rule: "engineer_review",
+      severity: "advisory",
+      text: "This build involves structural work that typically needs a permit or engineer sign-off - check your local codes before starting.",
+    });
+  }
+
+  // Load-bearing / attached-to-structure. Not one of Austin's four rules —
+  // grounded in docs/space-measurement.md's "flag for manual verification"
+  // guidance for builds tied into an existing structure.
+  if (input.attachedToStructure) {
+    flags.push({
+      rule: "attached_to_structure",
+      severity: "advisory",
+      text: "You noted this build attaches to an existing structure (deck, wall, or roof). Load-bearing capacity needs manual verification before building.",
+    });
+  }
+
+  // Rule 1 - Fits in Space
   const fitsFootprint =
     input.length_ft >= project.footprint.length_ft &&
     input.width_ft >= project.footprint.width_ft;
   if (!fitsFootprint) {
-    return {
-      fits: false,
-      complications: [
-        `Your space (${input.length_ft}×${input.width_ft} ft) is smaller than this project's ${project.footprint.length_ft}×${project.footprint.width_ft} ft footprint.`,
-      ],
-    };
+    flags.push({
+      rule: "fits_in_space",
+      severity: "blocking",
+      text: `This project needs about ${project.footprint.length_ft} x ${project.footprint.width_ft} ft - your space is ${input.length_ft} x ${input.width_ft} ft. It may not fit as designed.`,
+    });
   }
 
+  // Rule 2 - Has Clearance
   const fitsClearance = input.clearance_ft >= project.clearance_ft;
   if (!fitsClearance) {
-    return {
-      fits: false,
-      complications: [
-        `This project needs ${project.clearance_ft} ft of clearance; you entered ${input.clearance_ft} ft.`,
-      ],
-    };
+    flags.push({
+      rule: "has_clearance",
+      severity: "blocking",
+      text: `This project needs ${project.clearance_ft} ft of clearance to build and use safely - you entered ${input.clearance_ft} ft.`,
+    });
   }
 
-  const complications = [];
+  // Rule 4 - Obstacle Conflict. Only obstacles the project actually lists as
+  // relevant trigger a flag. Utility lines get a stronger flag treatment
+  // than the other three, per Austin's doc ("call-before-you-dig applies
+  // regardless of what HandyDad says").
+  const checkedObstacles = [
+    input.sloped && "slope",
+    input.hasTree && "tree",
+    input.hasFenceLine && "fence_line",
+    input.hasUtilityLines && "utility_lines",
+  ].filter(Boolean);
 
-  // Slope: flag rather than compute a precise grade (docs/space-measurement.md §2).
-  if (input.sloped) {
-    complications.push(
-      "You noted sloped ground. This design may need extra bracing or leveling posts — confirm before buying materials."
-    );
-  }
-
-  // Load-bearing: flag for manual verification, not an automated calculation
-  // (docs/space-measurement.md §2 — "this is a safety-relevant judgment call").
-  if (input.attachedToStructure) {
-    complications.push(
-      "You noted this build attaches to an existing structure (deck, wall, or roof). Load-bearing capacity needs manual verification before building — HandyDad can't calculate that for you."
-    );
-  }
-
-  if (input.hasTree && project.obstacles_relevant?.includes("tree")) {
-    complications.push(
-      "You noted a tree in the area. Confirm the trunk and major limbs are healthy and thick enough to bear weight before attaching anything."
-    );
-  }
-  if (input.hasFenceLine) {
-    complications.push(
-      "You noted a nearby fence line. Confirm your local property-line setback distance before finalizing placement."
-    );
-  }
-  if (input.hasUtilityLines) {
-    complications.push(
-      "You noted known utility lines nearby. Confirm their exact location before any digging or post-setting."
-    );
+  for (const obstacle of checkedObstacles) {
+    if (!project.obstacles_relevant?.includes(obstacle)) continue;
+    flags.push({
+      rule: "obstacle_conflict",
+      severity: obstacle === "utility_lines" ? "advisory-strong" : "advisory",
+      text: `You noted a ${OBSTACLE_LABELS[obstacle]} in this area - double check it won't interfere with the build.`,
+    });
   }
 
-  if (project.engineer_review_required) {
-    complications.push(
-      "This project involves a structural element (elevated deck, retaining wall, or tie-in) that should be reviewed for load-bearing safety before building."
-    );
-  }
-  if (project.max_unassisted_height_ft != null) {
-    complications.push(
-      `This build reaches ${project.max_unassisted_height_ft} ft unassisted — plan for a second person or extra bracing when raising it.`
-    );
-  }
-
-  return { fits: true, complications };
+  return {
+    flags,
+    hasBlockingFlags: flags.some((f) => f.severity === "blocking"),
+  };
 }

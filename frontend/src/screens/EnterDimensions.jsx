@@ -7,7 +7,9 @@ export default function EnterDimensions({ projectId, onBack, onSubmit }) {
     length_ft: "",
     width_ft: "",
     clearance_ft: "",
+    entered_height_ft: "",
     sloped: false,
+    attachedToStructure: false,
     hasTree: false,
     hasFenceLine: false,
     hasUtilityLines: false,
@@ -20,15 +22,27 @@ export default function EnterDimensions({ projectId, onBack, onSubmit }) {
     setForm((f) => ({ ...f, [field]: value }));
   }
 
+  // Rule 3 (docs/Basic Safety Complication Flagging Rules) only needs an
+  // entered height to compare against max_unassisted_height_ft when the
+  // project actually has that threshold — "where the project asks for it."
+  const needsHeight = project.max_unassisted_height_ft != null;
+
   function handleSubmit() {
-    const { length_ft, width_ft, clearance_ft } = form;
+    const { length_ft, width_ft, clearance_ft, entered_height_ft } = form;
     // NF2: clear, specific error messages for invalid/incomplete entries
     // rather than failing silently.
-    if (!length_ft || !width_ft || !clearance_ft) {
-      setError("Enter length, width, and clearance before checking your space.");
+    if (!length_ft || !width_ft || !clearance_ft || (needsHeight && !entered_height_ft)) {
+      setError(
+        needsHeight
+          ? "Enter length, width, clearance, and height before checking your space."
+          : "Enter length, width, and clearance before checking your space."
+      );
       return;
     }
-    if ([length_ft, width_ft, clearance_ft].some((v) => Number(v) <= 0)) {
+    const required = needsHeight
+      ? [length_ft, width_ft, clearance_ft, entered_height_ft]
+      : [length_ft, width_ft, clearance_ft];
+    if (required.some((v) => Number(v) <= 0)) {
       setError("Dimensions must be greater than zero.");
       return;
     }
@@ -38,6 +52,7 @@ export default function EnterDimensions({ projectId, onBack, onSubmit }) {
       length_ft: Number(length_ft),
       width_ft: Number(width_ft),
       clearance_ft: Number(clearance_ft),
+      entered_height_ft: needsHeight ? Number(entered_height_ft) : null,
     });
   }
 
@@ -69,10 +84,25 @@ export default function EnterDimensions({ projectId, onBack, onSubmit }) {
             </div>
           </div>
 
+          {needsHeight && (
+            <div>
+              <label htmlFor="height">
+                Height of build (ft) &mdash; this project needs engineer sign-off above {project.max_unassisted_height_ft} ft
+              </label>
+              <input
+                id="height"
+                type="number"
+                value={form.entered_height_ft}
+                onChange={(e) => update("entered_height_ft", e.target.value)}
+              />
+            </div>
+          )}
+
           <div>
             <label style={{ marginBottom: 10 }}>Known obstacles nearby</label>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <CheckRow label="Sloped ground" checked={form.sloped} onChange={(v) => update("sloped", v)} />
+              <CheckRow label="Attached to an existing structure (deck, wall, or roof)" checked={form.attachedToStructure} onChange={(v) => update("attachedToStructure", v)} />
               <CheckRow label="Tree or large root system in the area" checked={form.hasTree} onChange={(v) => update("hasTree", v)} />
               <CheckRow label="Fence line or property boundary nearby" checked={form.hasFenceLine} onChange={(v) => update("hasFenceLine", v)} />
               <CheckRow label="Known underground utility lines" checked={form.hasUtilityLines} onChange={(v) => update("hasUtilityLines", v)} />

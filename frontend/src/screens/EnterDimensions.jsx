@@ -8,6 +8,7 @@ export default function EnterDimensions({ projectId, onBack, onSubmit }) {
     width_ft: "",
     clearance_ft: "",
     sloped: false,
+    attachedToStructure: false,
     hasTree: false,
     hasFenceLine: false,
     hasUtilityLines: false,
@@ -73,6 +74,7 @@ export default function EnterDimensions({ projectId, onBack, onSubmit }) {
             <label style={{ marginBottom: 10 }}>Known obstacles nearby</label>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <CheckRow label="Sloped ground" checked={form.sloped} onChange={(v) => update("sloped", v)} />
+              <CheckRow label="Attached to an existing structure (deck, wall, or roof)" checked={form.attachedToStructure} onChange={(v) => update("attachedToStructure", v)} />
               <CheckRow label="Tree or large root system in the area" checked={form.hasTree} onChange={(v) => update("hasTree", v)} />
               <CheckRow label="Fence line or property boundary nearby" checked={form.hasFenceLine} onChange={(v) => update("hasFenceLine", v)} />
               <CheckRow label="Known underground utility lines" checked={form.hasUtilityLines} onChange={(v) => update("hasUtilityLines", v)} />

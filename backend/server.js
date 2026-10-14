@@ -1,12 +1,13 @@
 /**
- * HandyDad backend — Monthly Build Challenge API.
- * Owner: Razee Nepal
+ * HandyDad backend — Monthly Build Challenge API and Q&A contract stub.
+ * Challenge owner: Razee Nepal; Q&A owner: Nicholas Marshall.
  *
  * Endpoints:
  *   GET  /api/challenge                     -> { monthLabel, votingClosesLabel, votingClosesAt, submissions }
  *   POST /api/challenge/submissions         body: { title, builderName }
  *   POST /api/challenge/submissions/:id/vote body: { voterId }
  *   GET  /api/challenge/archive             -> past months + winners
+ *   POST /api/qa/questions                    body: { projectId, question } (stub)
  *
  * See docs/monthly-build-challenge-backend.md for the design doc and how
  * this is meant to replace the frontend's mock data
@@ -15,9 +16,12 @@
 
 import express from "express";
 import { getChallenge, addSubmission, castVote, getArchive } from "./lib/challengeStore.js";
+import { handleQuestion } from "./lib/qa.js";
 
 const app = express();
 app.use(express.json());
+
+app.post("/api/qa/questions", handleQuestion);
 
 app.get("/api/challenge", (req, res) => {
   res.json(getChallenge());

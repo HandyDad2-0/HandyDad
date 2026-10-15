@@ -309,6 +309,13 @@ input[type="number"] {
   color: var(--warn-text);
 }
 
+.flag.warn-strong {
+  background: var(--warn-bg);
+  border: 2px solid var(--warn-border);
+  color: var(--warn-text);
+  font-weight: 600;
+}
+
 .flag.error {
   background: #fbe4e0;
   border: 1px solid #e0a08f;

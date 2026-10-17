@@ -13,5 +13,9 @@ export default defineConfig({
     fs: {
       allow: [".."],
     },
+    // The challenge and Q&A APIs live in ../backend (npm start, port 3001).
+    proxy: {
+      "/api": "http://localhost:3001",
+    },
   },
 });

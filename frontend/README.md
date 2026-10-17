@@ -11,6 +11,10 @@ npm install
 npm run dev
 ```
 
+The Monthly Challenge screen talks to the backend API. In a second
+terminal, start it with `npm install && npm start` inside `backend/`
+(port 3001); the Vite dev server proxies `/api` to it.
+
 ## What's real vs. placeholder
 
 - **Project data** (`src/data/projects.js`) reads directly from
@@ -31,16 +35,16 @@ npm run dev
   When that lands, swap this module's internals for the real one — the
   `checkFit(project, input)` function signature is meant to stay stable
   so the screens don't need to change.
+- **Monthly Challenge** (`src/screens/MonthlyChallenge.jsx`) loads, submits and votes through Razee's API. Votes use a random `voterId` kept in localStorage; the server enforces one vote per submission per `voterId` and answers 409 on a repeat, which the screen handles.
 - **Navigation** (`src/App.jsx`) is simple React state, not a router.
   Fine for four screens; worth moving to a real router if more screens
   get added.
 
 ## Not yet wired up
 
-- Free-text idea search and the Monthly Build Challenge (both approved
-  Sprint 1 features, tracked separately on Trello) aren't in this
-  scaffold — the library screen has a placeholder box noting this.
-- No backend/API server exists yet — this app currently imports
-  `backend/materials-engine.js` and the seed data file directly from
-  the filesystem at build time. See Trello: "Backend/API integration
-  layer" for when that changes to a real fetch/API call.
+- Free-text idea search (Describe Your Idea) isn't in the frontend yet;
+  the library screen has a placeholder box noting this.
+- Only the Monthly Challenge goes through the API (`src/lib/challengeApi.js`,
+  using the `/api/challenge` endpoints). Project data and materials pricing
+  are still imported directly from the filesystem at build time. See
+  Trello: "Backend/API integration layer" for when that changes.

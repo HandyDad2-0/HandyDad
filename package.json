@@ -1,0 +1,10 @@
+{
+  "name": "handydad",
+  "private": true,
+  "description": "Root test runner for HandyDad. Runs both backend/ and frontend/ test suites from one command — see README.md > Running Tests.",
+  "scripts": {
+    "test": "npm test --prefix backend && npm test --prefix frontend",
+    "test:backend": "npm test --prefix backend",
+    "test:frontend": "npm test --prefix frontend"
+  }
+}

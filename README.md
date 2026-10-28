@@ -17,6 +17,7 @@ This repository is the codebase for our CSCE 4901 Capstone I / II project.
 - [Project Status](#project-status)
 - [Team](#team)
 - [Getting Started](#getting-started)
+- [Running Tests](#running-tests)
 - [Repository Structure](#repository-structure)
 - [Contributing](#contributing)
 
@@ -81,7 +82,37 @@ Setup instructions will be added once the initial project scaffold is in place.
 ```bash
 git clone https://github.com/HandyDad2-0/HandyDad.git
 cd HandyDad
+cd backend && npm install && cd ..
+cd frontend && npm install && cd ..
 ```
+
+Run the app locally with two terminals:
+
+```bash
+cd backend && npm start   # http://localhost:3001
+cd frontend && npm run dev  # http://localhost:5173
+```
+
+## Running Tests
+
+Run everything (backend + frontend) from the repo root with one command:
+
+```bash
+npm test
+```
+
+This runs `backend/`'s suite first (unit tests for the dimension-fit engine, materials engine, Monthly Challenge store, Q&A stub, and a schema-validation test that checks every project in `data/seed-projects.json` against the project schema and runs it through both the materials and dimension-fit engines), then `frontend/`'s. It stops at the first failing suite and exits non-zero, so it's safe to wire into CI as-is.
+
+To run just one side:
+
+```bash
+npm run test:backend
+npm run test:frontend
+```
+
+Or from inside either folder directly: `cd backend && npm test` / `cd frontend && npm test`.
+
+The frontend doesn't currently have its own tests — all engine logic lives in `backend/` — so `npm run test:frontend` will report 0 tests and exit cleanly rather than failing. That's expected, not a bug.
 
 ## Repository Structure
 

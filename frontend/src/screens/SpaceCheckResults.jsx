@@ -14,6 +14,13 @@ const SEVERITY_CLASS = {
   "advisory-strong": "warn-strong",
 };
 
+// Severity is also spelled out in text so it isn't conveyed by color alone.
+const SEVERITY_LABEL = {
+  blocking: "Blocking:",
+  advisory: "Advisory:",
+  "advisory-strong": "Important advisory:",
+};
+
 export default function SpaceCheckResults({ projectId, input, onEditDimensions }) {
   const project = getProjectById(projectId);
   const [flags, setFlags] = useState(null);
@@ -73,24 +80,32 @@ export default function SpaceCheckResults({ projectId, input, onEditDimensions }
 
   return (
     <div className="main-content">
-      <button className="back-link" onClick={onEditDimensions}>&larr; Edit dimensions</button>
+      <button className="back-link" onClick={onEditDimensions}><span aria-hidden="true">&larr;</span> Edit dimensions</button>
 
-      <h2 style={{ fontSize: 22, marginBottom: 6 }}>{project.name} &mdash; Your Space Check (R4)</h2>
+      <h1 style={{ fontSize: 22, marginBottom: 6 }}>{project.name} &mdash; Your Space Check (R4)</h1>
       <p style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 22 }}>
         Based on a {input.length_ft}&times;{input.width_ft} ft area with {input.clearance_ft} ft clearance
       </p>
 
       {/* R4: flags always show above the materials cards, never below, and never block the user from seeing them. */}
-      {flags.length === 0 && (
-        <div className="flag ok">
-          <strong>No complications found for this space</strong>
-        </div>
-      )}
-      {flags.map((flag, i) => (
-        <div className={`flag ${SEVERITY_CLASS[flag.severity]}`} key={i}>{flag.text}</div>
-      ))}
+      <section aria-labelledby="flags-heading">
+        <h2 id="flags-heading" className="sr-only">Complications for your space</h2>
+        {flags.length === 0 && (
+          <div className="flag ok">
+            <strong>No complications found for this space</strong>
+          </div>
+        )}
+        {flags.map((flag, i) => (
+          <div className={`flag ${SEVERITY_CLASS[flag.severity]}`} key={i}>
+            <div>
+              <span className="flag-label">{SEVERITY_LABEL[flag.severity]}</span>
+              {flag.text}
+            </div>
+          </div>
+        ))}
+      </section>
 
-      <h3 style={{ fontSize: 18, margin: "24px 0 4px" }}>Materials List &mdash; Choose Your Budget Tier (R5)</h3>
+      <h2 style={{ fontSize: 18, margin: "24px 0 4px" }}>Materials List &mdash; Choose Your Budget Tier (R5)</h2>
       {source === "estimate" && (
         <p className="empty-note">
           This project doesn't have a full itemized materials list yet &mdash; showing the hand-estimated range until Austin adds a complete BOM.
@@ -104,7 +119,7 @@ export default function SpaceCheckResults({ projectId, input, onEditDimensions }
               <div style={{ fontSize: 12, color: "var(--text-muted)", textTransform: "uppercase" }}>
                 {tier === "cedar" ? "Most Popular" : tier === "pine" ? "Budget" : "Premium"}
               </div>
-              <h4 style={{ fontSize: 18, marginTop: 4 }}>{TIER_LABELS[tier]}</h4>
+              <h3 style={{ fontSize: 18, marginTop: 4 }}>{TIER_LABELS[tier]}</h3>
               <div className="tier-price">
                 {t.total != null
                   ? `$${t.total.toFixed(2)}`

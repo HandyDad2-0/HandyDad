@@ -85,6 +85,11 @@ export function computeTierBreakdown(materials, tier) {
   }
 
   const items = materials.map((line) => {
+    if (typeof line.quantity !== "number" || !Number.isFinite(line.quantity) || line.quantity < 0) {
+      throw new Error(
+        `Invalid quantity for material "${line.id}": must be a finite number >= 0 (got ${line.quantity})`
+      );
+    }
     const unitPrice = unitPriceFor(line, tier);
     const lineCost = round2(line.quantity * unitPrice);
     return {

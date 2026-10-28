@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import { getProjectById } from "../data/projects.js";
-import { checkFit } from "../lib/dimensionFit.js";
+import { checkDimensionFit } from "../lib/dimensionFitApi.js";
 import { getTierBreakdown } from "../lib/materials.js";
 
 const TIER_LABELS = { pine: "Pine (Budget)", cedar: "Cedar (Mid-Range)", composite: "Composite (Premium)" };
@@ -15,9 +16,59 @@ const SEVERITY_CLASS = {
 
 export default function SpaceCheckResults({ projectId, input, onEditDimensions }) {
   const project = getProjectById(projectId);
+  const [flags, setFlags] = useState(null);
+  const [loadError, setLoadError] = useState(null);
+
+  function load() {
+    setLoadError(null);
+    setFlags(null);
+    checkDimensionFit({
+      projectId,
+      length_ft: input.length_ft,
+      width_ft: input.width_ft,
+      clearance_ft: input.clearance_ft,
+      entered_height_ft: input.entered_height_ft ?? null,
+      obstacles: {
+        sloped: input.sloped,
+        attachedToStructure: input.attachedToStructure,
+        hasTree: input.hasTree,
+        hasFenceLine: input.hasFenceLine,
+        hasUtilityLines: input.hasUtilityLines,
+      },
+    })
+      .then((result) => setFlags(result.flags))
+      .catch((err) => setLoadError(err.message));
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(load, [projectId, input]);
+
   if (!project) return <p className="main-content">Project not found.</p>;
 
-  const { flags } = checkFit(project, input);
+  if (loadError) {
+    return (
+      <div className="main-content">
+        <button className="back-link" onClick={onEditDimensions}>&larr; Edit dimensions</button>
+        <div className="flag error" role="alert">
+          <div>
+            <strong>Couldn't check your space.</strong> {loadError} Make sure the backend is running
+            (<code>npm start</code> in <code>backend/</code>).
+          </div>
+        </div>
+        <button className="btn-secondary" onClick={load}>Try again</button>
+      </div>
+    );
+  }
+
+  if (flags === null) {
+    return (
+      <div className="main-content">
+        <button className="back-link" onClick={onEditDimensions}>&larr; Edit dimensions</button>
+        <p className="empty-note" role="status">Checking your space&hellip;</p>
+      </div>
+    );
+  }
+
   const { source, tiers } = getTierBreakdown(project);
 
   return (

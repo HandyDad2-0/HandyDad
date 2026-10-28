@@ -1,6 +1,8 @@
 /**
- * HandyDad backend — Monthly Build Challenge API and Q&A contract stub.
- * Challenge owner: Razee Nepal; Q&A owner: Nicholas Marshall.
+ * HandyDad backend — Monthly Build Challenge API, Q&A contract stub, and
+ * the Dimension-Fit rules engine endpoint.
+ * Challenge owner: Razee Nepal; Q&A owner: Nicholas Marshall;
+ * Dimension-fit owner: Anish Jaiswal.
  *
  * Endpoints:
  *   GET  /api/challenge                     -> { monthLabel, votingClosesLabel, votingClosesAt, submissions }
@@ -8,20 +10,25 @@
  *   POST /api/challenge/submissions/:id/vote body: { voterId }
  *   GET  /api/challenge/archive             -> past months + winners
  *   POST /api/qa/questions                    body: { projectId, question } (stub)
+ *   POST /api/dimension-fit                   body: { projectId, length_ft, width_ft, clearance_ft, entered_height_ft?, obstacles? }
  *
  * See docs/monthly-build-challenge-backend.md for the design doc and how
  * this is meant to replace the frontend's mock data
  * (frontend/src/data/challengeSubmissions.js, frontend/src/lib/challenge.js).
+ * See dimension-fit-engine.js and lib/dimensionFitHandler.js for the rules
+ * engine and its input validation.
  */
 
 import express from "express";
 import { getChallenge, addSubmission, castVote, getArchive } from "./lib/challengeStore.js";
 import { handleQuestion } from "./lib/qa.js";
+import { handleDimensionFit } from "./lib/dimensionFitHandler.js";
 
 const app = express();
 app.use(express.json());
 
 app.post("/api/qa/questions", handleQuestion);
+app.post("/api/dimension-fit", handleDimensionFit);
 
 app.get("/api/challenge", (req, res) => {
   res.json(getChallenge());

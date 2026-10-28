@@ -1,24 +1,31 @@
-// Dimension-Fit Rules Engine
-// Owner: Anish Jaiswal
-//
-// Implements Austin's "Basic Safety/Complication Flagging Rules — First
-// Draft" (docs/Basic Safety Complication Flagging Rules — First Draft.docx)
-// against the user's entered space, plus one additional advisory
-// (attached-to-structure / load-bearing) from docs/space-measurement.md
-// that isn't in Austin's four-rule draft yet.
-//
-// Resolved with Austin: this module is the single implementation of the
-// flagging rules — his doc is the spec, not a separate code path. Key
-// behavior per his spec (different from this module's first draft):
-// none of these checks block the user from seeing the materials list.
-// Rule 1/2 ("blocking" severity) means "shown as a red flag", not
-// "stop the flow" — S-06 always renders, flags or no flags.
-//
-// NOTE: project.footprint.*_ft / clearance_ft are stored directly in
-// feet in data/seed-projects.json, not a single internal base unit (cm)
-// as docs/space-measurement.md's units decision specifies. Flagged on
-// PR #6's review, still unresolved upstream — this engine reads the
-// schema as it currently exists on disk.
+/**
+ * Dimension-Fit Rules Engine
+ * Owner: Anish Jaiswal
+ *
+ * Implements Austin's "Basic Safety/Complication Flagging Rules — First
+ * Draft" (docs/Basic Safety Complication Flagging Rules — First Draft.docx)
+ * against the user's entered space, plus one additional advisory
+ * (attached-to-structure / load-bearing) from docs/space-measurement.md
+ * that isn't in Austin's four-rule draft yet.
+ *
+ * Resolved with Austin: this module is the single implementation of the
+ * flagging rules — his doc is the spec, not a separate code path. Key
+ * behavior per his spec: none of these checks block the user from seeing
+ * the materials list. "blocking" severity means "shown as a red flag",
+ * not "stop the flow" — the frontend always renders, flags or no flags.
+ *
+ * Previously lived in frontend/src/lib/dimensionFit.js as its own copy;
+ * moved here and exposed through POST /api/dimension-fit (see server.js
+ * and lib/dimensionFitHandler.js) so the frontend no longer carries a
+ * duplicate of this logic — see Trello "Dimension-fit API endpoint and
+ * input validation."
+ *
+ * NOTE: project.footprint.*_ft / clearance_ft are stored directly in
+ * feet in data/seed-projects.json, not a single internal base unit (cm)
+ * as docs/space-measurement.md's units decision specifies. Flagged on
+ * PR #6's review, still unresolved upstream — this engine reads the
+ * schema as it currently exists on disk.
+ */
 
 const OBSTACLE_LABELS = {
   slope: "slope",

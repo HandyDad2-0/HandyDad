@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { checkFit } from "../src/lib/dimensionFit.js";
+import { checkFit } from "../dimension-fit-engine.js";
 
 const seedProjects = JSON.parse(fs.readFileSync(new URL("../../data/seed-projects.json", import.meta.url)));
 const getProject = (id) => seedProjects.find((p) => p.id === id);

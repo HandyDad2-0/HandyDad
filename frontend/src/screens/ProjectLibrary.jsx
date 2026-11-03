@@ -1,19 +1,24 @@
 import { useMemo, useState } from "react";
-import { projects, CATEGORY_LABELS, SKILL_LABELS, timeBucket } from "../data/projects.js";
+import { projects, CATEGORY_LABELS, SKILL_LABELS } from "../data/projects.js";
+import { filterProjects, hasActiveFilters, formatHours, describeFilters } from "../lib/libraryFilters.js";
 
 export default function ProjectLibrary({ onSelectProject }) {
   const [category, setCategory] = useState("all");
   const [time, setTime] = useState("all");
   const [skill, setSkill] = useState("all");
 
-  const filtered = useMemo(() => {
-    return projects.filter((p) => {
-      if (category !== "all" && p.category !== category) return false;
-      if (time !== "all" && timeBucket(p) !== time) return false;
-      if (skill !== "all" && p.skill_level !== skill) return false;
-      return true;
-    });
-  }, [category, time, skill]);
+  const filtered = useMemo(
+    () => filterProjects(projects, { category, time, skill }),
+    [category, time, skill]
+  );
+  const filtersOn = hasActiveFilters({ category, time, skill });
+  const fitNote = describeFilters({ time, skill });
+
+  function clearFilters() {
+    setCategory("all");
+    setTime("all");
+    setSkill("all");
+  }
 
   return (
     <>
@@ -28,21 +33,24 @@ export default function ProjectLibrary({ onSelectProject }) {
           </div>
         </div>
         <div className="filter-group" role="group" aria-labelledby="filter-time">
-          <span id="filter-time">Time Commitment (R6)</span>
+          <span id="filter-time">How much time do you have?</span>
           <div className="chip-row">
             <Chip active={time === "all"} onClick={() => setTime("all")}>Any</Chip>
-            <Chip active={time === "weekend"} onClick={() => setTime("weekend")}>I have a weekend</Chip>
-            <Chip active={time === "week"} onClick={() => setTime("week")}>I have a week</Chip>
+            <Chip active={time === "weekend"} onClick={() => setTime("weekend")}>A weekend</Chip>
+            <Chip active={time === "week"} onClick={() => setTime("week")}>A week</Chip>
           </div>
         </div>
         <div className="filter-group" role="group" aria-labelledby="filter-skill">
-          <span id="filter-skill">Skill Level (R6)</span>
+          <span id="filter-skill">How much experience do you have?</span>
           <div className="chip-row">
             <Chip active={skill === "all"} onClick={() => setSkill("all")}>Any</Chip>
             <Chip active={skill === "beginner"} onClick={() => setSkill("beginner")}>First-Timer</Chip>
             <Chip active={skill === "intermediate"} onClick={() => setSkill("intermediate")}>Some Experience</Chip>
           </div>
         </div>
+        {filtersOn && (
+          <button type="button" className="clear-filters" onClick={clearFilters}>Clear filters</button>
+        )}
       </div>
 
       <div className="idea-box">
@@ -57,6 +65,7 @@ export default function ProjectLibrary({ onSelectProject }) {
       <div className="main-content">
         <h2 style={{ marginBottom: 16, fontSize: 20 }} aria-live="polite" aria-atomic="true">
           {filtered.length} {filtered.length === 1 ? "project" : "projects"}
+          {fitNote && <span className="result-note"> that {fitNote}</span>}
         </h2>
         {filtered.length > 0 && (
         <ul className="project-grid">
@@ -71,7 +80,7 @@ export default function ProjectLibrary({ onSelectProject }) {
                   <span className={`tag ${p.category === "chore_easing" ? "chore" : ""}`}>
                     {CATEGORY_LABELS[p.category]}
                   </span>
-                  <span className="tag">{timeBucket(p) === "weekend" ? "Weekend" : "Week"}</span>
+                  <span className="tag">{formatHours(p.build_time_hours)}</span>
                 </div>
                 <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
                   {SKILL_LABELS[p.skill_level]}
@@ -82,7 +91,10 @@ export default function ProjectLibrary({ onSelectProject }) {
         </ul>
         )}
         {filtered.length === 0 && (
-          <p className="empty-note">No projects match these filters yet.</p>
+          <div className="empty-note" role="status">
+            <p>No projects match these filters yet.</p>
+            <button type="button" className="btn-secondary" onClick={clearFilters}>Clear filters</button>
+          </div>
         )}
       </div>
     </>

@@ -36,6 +36,13 @@ terminal, start it with `npm install && npm start` inside `backend/`
   `checkFit(project, input)` function signature is meant to stay stable
   so the screens don't need to change.
 - **Monthly Challenge** (`src/screens/MonthlyChallenge.jsx`) loads, submits and votes through Razee's API. Votes use a random `voterId` kept in localStorage; the server enforces one vote per submission per `voterId` and answers 409 on a repeat, which the screen handles.
+- **Library filters (R6)** (`src/lib/libraryFilters.js`, tests in
+  `libraryFilters.test.js`). Time and skill are "what fits me" filters: *A weekend*
+  shows builds of 16 hours or less, *A week* up to 40 hours (so it includes
+  weekend builds), *First-Timer* shows beginner builds and *Some Experience*
+  shows beginner and intermediate. Time comes from `build_time_hours.max`,
+  skill from `skill_level`. Change `TIME_LIMITS` / `SKILL_ORDER` if the
+  team wants different cut-offs.
 - **Navigation** (`src/App.jsx`) is simple React state, not a router.
   Fine for four screens; worth moving to a real router if more screens
   get added.

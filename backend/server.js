@@ -11,24 +11,32 @@
  *   GET  /api/challenge/archive             -> past months + winners
  *   POST /api/qa/questions                    body: { projectId, question } (stub)
  *   POST /api/dimension-fit                   body: { projectId, length_ft, width_ft, clearance_ft, entered_height_ft?, obstacles? }
+ *   GET  /api/projects                        -> { projects }
+ *   GET  /api/projects/:id                    -> project record (404 if unknown)
+ *   GET  /api/projects/:id/materials          -> { projectId, source, tiers } (see lib/projectsHandlers.js)
  *
  * See docs/monthly-build-challenge-backend.md for the design doc and how
  * this is meant to replace the frontend's mock data
  * (frontend/src/data/challengeSubmissions.js, frontend/src/lib/challenge.js).
  * See dimension-fit-engine.js and lib/dimensionFitHandler.js for the rules
- * engine and its input validation.
+ * engine and its input validation, and docs/api-integration-layer.md for the
+ * projects/materials endpoints.
  */
 
 import express from "express";
 import { getChallenge, addSubmission, castVote, getArchive } from "./lib/challengeStore.js";
 import { handleQuestion } from "./lib/qa.js";
 import { handleDimensionFit } from "./lib/dimensionFitHandler.js";
+import { handleListProjects, handleGetProject, handleGetProjectMaterials } from "./lib/projectsHandlers.js";
 
 const app = express();
 app.use(express.json());
 
 app.post("/api/qa/questions", handleQuestion);
 app.post("/api/dimension-fit", handleDimensionFit);
+app.get("/api/projects", handleListProjects);
+app.get("/api/projects/:id", handleGetProject);
+app.get("/api/projects/:id/materials", handleGetProjectMaterials);
 
 app.get("/api/challenge", (req, res) => {
   res.json(getChallenge());

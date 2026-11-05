@@ -49,8 +49,18 @@ terminal, start it with `npm install && npm start` inside `backend/`
 
 ## Not yet wired up
 
-- Free-text idea search (Describe Your Idea) isn't in the frontend yet;
-  the library screen has a placeholder box noting this.
+- **Describe Your Idea** (`src/screens/DescribeIdea.jsx`, `src/lib/ideaMatchApi.js`)
+  expects `POST /api/ideas/match` from Nicholas's backend. The response shape
+  it codes against (`{ matches: [{ projectId, matchPercent, reason }], noMatch }`)
+  was proposed to him and is **not confirmed**; all shape-dependent code is in
+  `ideaMatchApi.js`. Until the endpoint exists the screen shows an
+  "unavailable" notice. The custom-build path only explains that custom builds
+  can't be saved yet, because what it saves hasn't been decided.
+- **Ask HandyDad** (`src/components/AskHandyDad.jsx`, `src/lib/qaApi.js`) calls
+  `POST /api/qa/questions`. The backend is still the 501 stub, so the panel
+  shows its message as "Not available yet" and never presents an answer unless
+  the server returns a real one. The 200 success schema still needs team
+  agreement (see `docs/qa-api-interface.md`).
 - Only the Monthly Challenge goes through the API (`src/lib/challengeApi.js`,
   using the `/api/challenge` endpoints). Project data and materials pricing
   are still imported directly from the filesystem at build time. See

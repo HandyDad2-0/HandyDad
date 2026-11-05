@@ -1,3 +1,4 @@
+import AskHandyDad from "../components/AskHandyDad.jsx";
 import { getProjectById, CATEGORY_LABELS, SKILL_LABELS, timeBucket } from "../data/projects.js";
 
 export default function ProjectDetail({ projectId, onBack, onCheckSpace }) {
@@ -53,6 +54,7 @@ export default function ProjectDetail({ projectId, onBack, onCheckSpace }) {
             Check My Space &amp; Get Materials List
           </button>
           <button className="btn-secondary">Save to My Projects</button>
+          <AskHandyDad projectId={project.id} projectName={project.name} />
         </div>
       </div>
     </div>

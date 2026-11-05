@@ -4,8 +4,9 @@ import ProjectDetail from "./screens/ProjectDetail.jsx";
 import EnterDimensions from "./screens/EnterDimensions.jsx";
 import SpaceCheckResults from "./screens/SpaceCheckResults.jsx";
 import MonthlyChallenge from "./screens/MonthlyChallenge.jsx";
+import DescribeIdea from "./screens/DescribeIdea.jsx";
 
-const LIBRARY_SCREENS = ["library", "detail", "dimensions", "results"];
+const LIBRARY_SCREENS = ["library", "detail", "dimensions", "results", "idea"];
 
 // Simple state-based navigation for the scaffold — no router dependency
 // yet. Swap for react-router (or similar) once there are enough screens
@@ -62,7 +63,10 @@ export default function App() {
       <main id="main" tabIndex={-1}>
 
       {screen.name === "library" && (
-        <ProjectLibrary onSelectProject={(id) => setScreen({ name: "detail", projectId: id })} />
+        <ProjectLibrary
+          onSelectProject={(id) => setScreen({ name: "detail", projectId: id })}
+          onDescribeIdea={() => setScreen({ name: "idea" })}
+        />
       )}
 
       {screen.name === "detail" && (
@@ -86,6 +90,13 @@ export default function App() {
           projectId={screen.projectId}
           input={screen.input}
           onEditDimensions={() => setScreen({ name: "dimensions", projectId: screen.projectId })}
+        />
+      )}
+
+      {screen.name === "idea" && (
+        <DescribeIdea
+          onBack={() => setScreen({ name: "library" })}
+          onSelectProject={(id) => setScreen({ name: "detail", projectId: id })}
         />
       )}
 

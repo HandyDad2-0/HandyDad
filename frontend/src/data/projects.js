@@ -2,6 +2,7 @@
 // shaped to Razee's schema (docs/project-schema.md). Do not hand-edit
 // project content here — edit /data/seed-projects.json instead.
 import seedProjects from "../../../data/seed-projects.json";
+import { TIME_LIMITS } from "../lib/libraryFilters.js";
 
 export const projects = seedProjects;
 
@@ -21,6 +22,8 @@ export const SKILL_LABELS = {
 
 export function timeBucket(project) {
   // R6: "I have a weekend" vs "I have a week" filter, derived from
-  // build_time_hours until content explicitly tags a bucket.
-  return project.build_time_hours.max <= 16 ? "weekend" : "week";
+  // build_time_hours until content explicitly tags a bucket. Uses the same
+  // limits as the library filters so a "Weekend" tag on Project Detail always
+  // matches what the "Weekend" filter shows.
+  return project.build_time_hours.max <= TIME_LIMITS.weekend ? "weekend" : "week";
 }

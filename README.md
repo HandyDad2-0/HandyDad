@@ -110,6 +110,14 @@ npm run test:backend
 npm run test:frontend
 ```
 
+To check only the seed project data after editing `data/seed-projects.json`:
+
+```bash
+npm run validate:seed
+```
+
+It fails with a message naming the project and the problem: a missing or misspelled field, a time/skill tag the Project Library filters can't use, a missing bill of materials, or a stale `pending_fields` entry.
+
 Or from inside either folder directly: `cd backend && npm test` / `cd frontend && npm test`.
 
 The frontend doesn't currently have its own tests — all engine logic lives in `backend/` — so `npm run test:frontend` will report 0 tests and exit cleanly rather than failing. That's expected, not a bug.

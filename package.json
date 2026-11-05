@@ -5,6 +5,7 @@
   "scripts": {
     "test": "npm test --prefix backend && npm test --prefix frontend",
     "test:backend": "npm test --prefix backend",
-    "test:frontend": "npm test --prefix frontend"
+    "test:frontend": "npm test --prefix frontend",
+    "validate:seed": "node --test backend/test/seedProjectsSchema.test.js"
   }
 }

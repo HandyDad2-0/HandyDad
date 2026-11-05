@@ -84,6 +84,17 @@ Footprint and clearance convert directly from Austin's existing text (no new res
 
 **Update (Nov 4, 2026):** The library is now 18 projects. The 10 new entries come from `docs/Seed Project Library Expansion.docx` (dimensions, build times, skill levels, and reference budgets as written there), each with a full `materials` BOM. `obstacles_relevant` is now filled on every project, so nothing is left in `pending_fields`. Projects that involve digging (sandbox, swing set anchors, raised bed, hose post footing) all list `utility_lines`. All 18 remain `engineer_review_required: false` with no `max_unassisted_height_ft`. Content-specific safety rules (no latch on the toy box, lid stays on lidded storage, `utility_lines` on digging projects) are pinned by `backend/test/seedProjectSafety.test.js`.
 
+## Validation
+
+`backend/test/seedProjectsSchema.test.js` checks every project in `data/seed-projects.json` against this schema. Run it on its own with `npm run validate:seed` from the repo root (it also runs as part of `npm test`). Beyond field types, it enforces:
+
+- every required field is present, and there are no unknown fields (catches typos like `skill_lvl`);
+- `skill_level` is a level the R6 skill filter knows, and `build_time_hours.max` fits the longest R6 time filter (a week, 40 hrs), so every project shows up under some filter;
+- beginner projects fit a weekend (16 hrs), so the time and skill tags don't contradict each other;
+- every project has a non-empty `materials` BOM unless `materials` is listed in `pending_fields`, and `pending_fields` doesn't list a field that's already filled in;
+- `budget_estimate_reference` is present, since Project Detail still reads it (drop this rule if the field is retired);
+- every BOM prices through the materials engine, and every project runs through the dimension-fit engine.
+
 ## Open questions
 
 - Who actually reshapes the 8 seed projects into this schema — Austin (owns the content) or whoever needs it first? Proposing Austin, since `engineer_review_required` and `obstacles_relevant` require judgment calls about the actual builds that only the content owner can make confidently.

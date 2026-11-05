@@ -685,6 +685,137 @@ ol.leaderboard {
   gap: 18px;
 }
 
+/* Describe Your Idea (S-02) and Ask HandyDad */
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font: inherit;
+  font-size: 14px;
+  resize: vertical;
+}
+
+textarea[aria-invalid="true"] {
+  border-color: #7a2f1f;
+  border-width: 2px;
+}
+
+.idea-layout {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.idea-layout .form-card,
+.ask-panel form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.idea-layout .form-card {
+  margin-bottom: 20px;
+}
+
+.field-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.idea-results {
+  margin-top: 8px;
+}
+
+.idea-results:focus {
+  outline: none;
+}
+
+.match-list {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.match-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.match-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.match-percent {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent-dark);
+  white-space: nowrap;
+}
+
+.match-bar {
+  height: 8px;
+  background: var(--tag-bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.match-bar-fill {
+  height: 100%;
+  background: var(--accent);
+}
+
+.match-reason {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.custom-path {
+  background: #fbf3e7;
+  border: 1px dashed #c9a87c;
+  border-radius: 14px;
+  padding: 16px 20px;
+}
+
+.ask-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 20px;
+}
+
+.ask-panel .flag {
+  margin-top: 12px;
+}
+
+.ask-answer {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.idea-box .btn-secondary {
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .idea-box {
+    flex-wrap: wrap;
+  }
+}
+
 /* Library filters (R6) */
 .clear-filters {
   align-self: flex-end;

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { projects, CATEGORY_LABELS, SKILL_LABELS } from "../data/projects.js";
 import { filterProjects, hasActiveFilters, formatHours, describeFilters } from "../lib/libraryFilters.js";
 
-export default function ProjectLibrary({ onSelectProject }) {
+export default function ProjectLibrary({ onSelectProject, onDescribeIdea }) {
   const [category, setCategory] = useState("all");
   const [time, setTime] = useState("all");
   const [skill, setSkill] = useState("all");
@@ -57,9 +57,10 @@ export default function ProjectLibrary({ onSelectProject }) {
         <div>
           <strong>Have something specific in mind?</strong>
           <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
-            Free-text idea search is planned for Sprint 1 (see Trello) — not wired up in this scaffold yet.
+            Describe what you want to build and we'll find similar projects.
           </div>
         </div>
+        <button type="button" className="btn-secondary" onClick={onDescribeIdea}>Describe your idea</button>
       </div>
 
       <div className="main-content">

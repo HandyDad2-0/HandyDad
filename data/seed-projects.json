@@ -15,7 +15,11 @@
     "clearance_ft": 3,
     "engineer_review_required": false,
     "max_unassisted_height_ft": null,
-    "obstacles_relevant": [],
+    "obstacles_relevant": [
+      "slope",
+      "tree",
+      "utility_lines"
+    ],
     "materials": [
       {
         "id": "framing-2x4",
@@ -60,10 +64,7 @@
         150
       ]
     },
-    "description": "A framed, in-ground sandbox with a bench-style lid to keep debris and pets out overnight. Good first project for parents building with young kids underfoot.",
-    "pending_fields": [
-      "obstacles_relevant"
-    ]
+    "description": "A framed, in-ground sandbox with a bench-style lid to keep debris and pets out overnight. Good first project for parents building with young kids underfoot."
   },
   {
     "id": "kid-picnic-table",
@@ -81,7 +82,9 @@
     "clearance_ft": 3,
     "engineer_review_required": false,
     "max_unassisted_height_ft": null,
-    "obstacles_relevant": [],
+    "obstacles_relevant": [
+      "slope"
+    ],
     "materials": [
       {
         "id": "framing-2x4",
@@ -126,10 +129,7 @@
         200
       ]
     },
-    "description": "A scaled-down picnic table sized for kids 4-10, seating up to four. Reuses the same joinery as the adult version, so it's a good starter build.",
-    "pending_fields": [
-      "obstacles_relevant"
-    ]
+    "description": "A scaled-down picnic table sized for kids 4-10, seating up to four. Reuses the same joinery as the adult version, so it's a good starter build."
   },
   {
     "id": "kid-a-frame-swing-set",
@@ -147,7 +147,12 @@
     "clearance_ft": 6,
     "engineer_review_required": false,
     "max_unassisted_height_ft": null,
-    "obstacles_relevant": [],
+    "obstacles_relevant": [
+      "slope",
+      "tree",
+      "fence_line",
+      "utility_lines"
+    ],
     "materials": [
       {
         "id": "framing-4x4",
@@ -192,10 +197,7 @@
         420
       ]
     },
-    "description": "A classic A-frame with one swing seat, rated for up to 150 lbs. Needs the widest clearance in this set because of the swing's arc.",
-    "pending_fields": [
-      "obstacles_relevant"
-    ]
+    "description": "A classic A-frame with one swing seat, rated for up to 150 lbs. Needs the widest clearance in this set because of the swing's arc."
   },
   {
     "id": "kid-simple-playhouse",
@@ -213,7 +215,10 @@
     "clearance_ft": 4,
     "engineer_review_required": false,
     "max_unassisted_height_ft": null,
-    "obstacles_relevant": [],
+    "obstacles_relevant": [
+      "slope",
+      "tree"
+    ],
     "materials": [
       {
         "id": "framing-2x4",
@@ -258,11 +263,373 @@
         850
       ]
     },
-    "description": "A basic four-wall, pitched-roof playhouse with a door and one window cutout, no flooring included. The biggest build here, and a good early test case for the safety/complication rules once they're live.",
-    "pending_fields": [
-      "obstacles_relevant"
+    "description": "A basic four-wall, pitched-roof playhouse with a door and one window cutout, no flooring included. The biggest build here, and a good early test case for the safety/complication rules once they're live."
+  },
+  {
+    "id": "kid-mud-kitchen",
+    "name": "Mud Kitchen / Play Kitchen Station",
+    "category": "kid_structure",
+    "skill_level": "beginner",
+    "build_time_hours": {
+      "min": 4,
+      "max": 5
+    },
+    "footprint": {
+      "length_ft": 4,
+      "width_ft": 2
+    },
+    "clearance_ft": 3,
+    "engineer_review_required": false,
+    "max_unassisted_height_ft": null,
+    "obstacles_relevant": [
+      "slope"
     ],
-    "_note": "materials is a worked example (matches the sample BOM in docs/budget-materials.md) so the schema has at least one fully-populated project; the other 7 still need materials authored."
+    "materials": [
+      {
+        "id": "framing-2x4",
+        "category": "framing",
+        "unit": "linear_ft",
+        "quantity": 36,
+        "tiered": true
+      },
+      {
+        "id": "decking-boards",
+        "category": "decking",
+        "unit": "linear_ft",
+        "quantity": 40,
+        "tiered": true
+      },
+      {
+        "id": "deck-screws-2.5in",
+        "category": "fasteners",
+        "unit": "box_100",
+        "quantity": 1,
+        "tiered": false
+      },
+      {
+        "id": "stainless-bowl",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 1,
+        "tiered": false
+      },
+      {
+        "id": "utensil-hooks",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 4,
+        "tiered": false
+      }
+    ],
+    "budget_estimate_reference": {
+      "pine": [
+        70,
+        100
+      ],
+      "cedar": [
+        120,
+        150
+      ],
+      "composite": [
+        190,
+        230
+      ]
+    },
+    "description": "A kid-height (about 24 in.) play counter with a drop-in stainless steel bowl as a sink, a backsplash with utensil hooks, and a lower shelf for pots. Designed to pair with the Backyard Sandbox. Cutting the bowl opening needs a jigsaw."
+  },
+  {
+    "id": "kid-adirondack-chair",
+    "name": "Kid-Size Adirondack Chair",
+    "category": "kid_structure",
+    "skill_level": "beginner",
+    "build_time_hours": {
+      "min": 3,
+      "max": 4
+    },
+    "footprint": {
+      "length_ft": 2,
+      "width_ft": 3
+    },
+    "clearance_ft": 2,
+    "engineer_review_required": false,
+    "max_unassisted_height_ft": null,
+    "obstacles_relevant": [],
+    "materials": [
+      {
+        "id": "framing-2x4",
+        "category": "framing",
+        "unit": "linear_ft",
+        "quantity": 12,
+        "tiered": true
+      },
+      {
+        "id": "decking-boards",
+        "category": "decking",
+        "unit": "linear_ft",
+        "quantity": 28,
+        "tiered": true
+      },
+      {
+        "id": "deck-screws-2in",
+        "category": "fasteners",
+        "unit": "box_100",
+        "quantity": 1,
+        "tiered": false
+      }
+    ],
+    "budget_estimate_reference": {
+      "pine": [
+        35,
+        50
+      ],
+      "cedar": [
+        60,
+        80
+      ],
+      "composite": [
+        110,
+        140
+      ]
+    },
+    "description": "A scaled-down Adirondack chair for kids ages 3-8, with the seat about 10 in. off the ground. Most cuts are straight, but the curved back and arm profiles need a jigsaw, making it a small step up from the Kids' Picnic Table."
+  },
+  {
+    "id": "kid-balance-beam",
+    "name": "Balance Beam",
+    "category": "kid_structure",
+    "skill_level": "beginner",
+    "build_time_hours": {
+      "min": 1,
+      "max": 2
+    },
+    "footprint": {
+      "length_ft": 8,
+      "width_ft": 2
+    },
+    "clearance_ft": 3,
+    "engineer_review_required": false,
+    "max_unassisted_height_ft": null,
+    "obstacles_relevant": [
+      "slope",
+      "tree"
+    ],
+    "materials": [
+      {
+        "id": "framing-4x4",
+        "category": "framing",
+        "unit": "linear_ft",
+        "quantity": 8,
+        "tiered": true
+      },
+      {
+        "id": "framing-2x6",
+        "category": "framing",
+        "unit": "linear_ft",
+        "quantity": 8,
+        "tiered": true
+      },
+      {
+        "id": "deck-screws-3in",
+        "category": "fasteners",
+        "unit": "box_100",
+        "quantity": 1,
+        "tiered": false
+      },
+      {
+        "id": "corner-brackets",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 4,
+        "tiered": false
+      }
+    ],
+    "budget_estimate_reference": {
+      "pine": [
+        25,
+        35
+      ],
+      "cedar": [
+        40,
+        55
+      ],
+      "composite": [
+        80,
+        100
+      ]
+    },
+    "description": "An 8 ft beam on low, wide feet that holds the walking surface about 4 in. off the ground. The fastest and cheapest build in the library. The 3 ft clearance is a fall zone needed on each side of the beam."
+  },
+  {
+    "id": "kid-art-easel",
+    "name": "Outdoor Art Easel (double-sided)",
+    "category": "kid_structure",
+    "skill_level": "beginner",
+    "build_time_hours": {
+      "min": 2,
+      "max": 3
+    },
+    "footprint": {
+      "length_ft": 3,
+      "width_ft": 3
+    },
+    "clearance_ft": 3,
+    "engineer_review_required": false,
+    "max_unassisted_height_ft": null,
+    "obstacles_relevant": [
+      "slope"
+    ],
+    "materials": [
+      {
+        "id": "framing-2x4",
+        "category": "framing",
+        "unit": "linear_ft",
+        "quantity": 24,
+        "tiered": true
+      },
+      {
+        "id": "decking-boards",
+        "category": "decking",
+        "unit": "linear_ft",
+        "quantity": 24,
+        "tiered": true
+      },
+      {
+        "id": "deck-screws-2in",
+        "category": "fasteners",
+        "unit": "box_100",
+        "quantity": 1,
+        "tiered": false
+      },
+      {
+        "id": "top-hinges",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 2,
+        "tiered": false
+      },
+      {
+        "id": "leg-stop-chain",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 1,
+        "tiered": false
+      },
+      {
+        "id": "paper-roll-dowel",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 1,
+        "tiered": false
+      },
+      {
+        "id": "chalkboard-paint",
+        "category": "finish",
+        "unit": "gallon",
+        "quantity": 0.25,
+        "tiered": false
+      }
+    ],
+    "budget_estimate_reference": {
+      "pine": [
+        45,
+        65
+      ],
+      "cedar": [
+        70,
+        95
+      ],
+      "composite": [
+        120,
+        150
+      ]
+    },
+    "description": "A freestanding A-frame easel with a chalkboard panel on each face, a paper-roll bar across the top, and a chalk and paint tray. Two kids can use it at once, so it needs 3 ft of clearance on both the front and the back. A chain stop keeps the legs from splaying."
+  },
+  {
+    "id": "kid-play-stand",
+    "name": "Kids' Play Stand (Lemonade / Market Stand)",
+    "category": "kid_structure",
+    "skill_level": "intermediate",
+    "build_time_hours": {
+      "min": 6,
+      "max": 8
+    },
+    "footprint": {
+      "length_ft": 4,
+      "width_ft": 2
+    },
+    "clearance_ft": 3,
+    "engineer_review_required": false,
+    "max_unassisted_height_ft": null,
+    "obstacles_relevant": [
+      "slope"
+    ],
+    "materials": [
+      {
+        "id": "framing-2x4",
+        "category": "framing",
+        "unit": "linear_ft",
+        "quantity": 48,
+        "tiered": true
+      },
+      {
+        "id": "decking-boards",
+        "category": "decking",
+        "unit": "linear_ft",
+        "quantity": 40,
+        "tiered": true
+      },
+      {
+        "id": "deck-screws-2.5in",
+        "category": "fasteners",
+        "unit": "box_100",
+        "quantity": 1,
+        "tiered": false
+      },
+      {
+        "id": "carriage-bolts",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 4,
+        "tiered": false
+      },
+      {
+        "id": "awning-fabric",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 1,
+        "tiered": false
+      },
+      {
+        "id": "locking-casters",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 4,
+        "tiered": false
+      },
+      {
+        "id": "chalkboard-paint",
+        "category": "finish",
+        "unit": "gallon",
+        "quantity": 0.25,
+        "tiered": false
+      }
+    ],
+    "budget_estimate_reference": {
+      "pine": [
+        100,
+        140
+      ],
+      "cedar": [
+        170,
+        210
+      ],
+      "composite": [
+        270,
+        330
+      ]
+    },
+    "description": "A freestanding counter with a front display shelf, two uprights holding a fabric awning, and a chalkboard sign panel. Doubles as a pretend shop or puppet theater. The upright frame and awning make it intermediate, and optional locking casters let it roll into storage. Needs 3 ft of clearance in front."
   },
   {
     "id": "chore-raised-garden-bed",
@@ -321,7 +688,7 @@
         220
       ]
     },
-    "description": "A single 4x8 raised bed, about 12 in. deep, for anyone starting a vegetable or flower garden. The fastest build in the whole seed list.",
+    "description": "A single 4x8 raised bed, about 12 in. deep, for anyone starting a vegetable or flower garden. One of the fastest builds in the library.",
     "_note": "obstacles_relevant taken directly from the example given in docs/basic-safety-complication-flagging-rules.md ('a raised bed cares about slope and utility lines'); still worth Austin confirming."
   },
   {
@@ -340,7 +707,10 @@
     "clearance_ft": 2,
     "engineer_review_required": false,
     "max_unassisted_height_ft": null,
-    "obstacles_relevant": [],
+    "obstacles_relevant": [
+      "slope",
+      "fence_line"
+    ],
     "materials": [
       {
         "id": "framing-2x4",
@@ -385,10 +755,7 @@
         170
       ]
     },
-    "description": "An open-sided rack that keeps a cord of firewood off the ground and covered on top. Solves the classic firewood-rotting-in-a-pile problem.",
-    "pending_fields": [
-      "obstacles_relevant"
-    ]
+    "description": "An open-sided rack that keeps a cord of firewood off the ground and covered on top. Solves the classic firewood-rotting-in-a-pile problem."
   },
   {
     "id": "chore-compost-bin",
@@ -406,7 +773,10 @@
     "clearance_ft": 3,
     "engineer_review_required": false,
     "max_unassisted_height_ft": null,
-    "obstacles_relevant": [],
+    "obstacles_relevant": [
+      "tree",
+      "fence_line"
+    ],
     "materials": [
       {
         "id": "framing-2x4",
@@ -458,10 +828,7 @@
         250
       ]
     },
-    "description": "A three-bin compost system so users can rotate active, curing, and finished compost separately. A step up in complexity, but still no power tools beyond a drill.",
-    "pending_fields": [
-      "obstacles_relevant"
-    ]
+    "description": "A three-bin compost system so users can rotate active, curing, and finished compost separately. A step up in complexity, but still no power tools beyond a drill."
   },
   {
     "id": "chore-trash-recycling-corral",
@@ -542,5 +909,360 @@
     },
     "description": "A slatted enclosure with a hinged gate that hides trash and recycling bins from the street. The gate swing is why it needs more clearance than the garden bed or firewood rack.",
     "_note": "obstacles_relevant is a draft guess (gate swing suggests proximity to a fence line) - needs Austin's confirmation, not asserted as final."
+  },
+  {
+    "id": "chore-rain-barrel-stand",
+    "name": "Rain Barrel Stand",
+    "category": "chore_easing",
+    "skill_level": "beginner",
+    "build_time_hours": {
+      "min": 2,
+      "max": 3
+    },
+    "footprint": {
+      "length_ft": 3,
+      "width_ft": 3
+    },
+    "clearance_ft": 2,
+    "engineer_review_required": false,
+    "max_unassisted_height_ft": null,
+    "obstacles_relevant": [
+      "slope"
+    ],
+    "materials": [
+      {
+        "id": "framing-4x4",
+        "category": "framing",
+        "unit": "linear_ft",
+        "quantity": 10,
+        "tiered": true
+      },
+      {
+        "id": "framing-2x4",
+        "category": "framing",
+        "unit": "linear_ft",
+        "quantity": 24,
+        "tiered": true
+      },
+      {
+        "id": "decking-boards",
+        "category": "decking",
+        "unit": "linear_ft",
+        "quantity": 18,
+        "tiered": true
+      },
+      {
+        "id": "lag-screws",
+        "category": "fasteners",
+        "unit": "box_100",
+        "quantity": 1,
+        "tiered": false
+      }
+    ],
+    "budget_estimate_reference": {
+      "pine": [
+        35,
+        50
+      ],
+      "cedar": [
+        60,
+        80
+      ],
+      "composite": [
+        110,
+        140
+      ]
+    },
+    "description": "A low, cross-braced platform that raises one 55-gallon rain barrel 18-24 in. so a watering can fits under the spigot and a soaker hose can drain by gravity. A full barrel weighs about 460 lbs, so the stand must sit on level, compacted gravel or pavers, not bare soil or a deck. The barrel and downspout diverter are not included in the materials list."
+  },
+  {
+    "id": "chore-potting-bench",
+    "name": "Potting Bench",
+    "category": "chore_easing",
+    "skill_level": "intermediate",
+    "build_time_hours": {
+      "min": 5,
+      "max": 6
+    },
+    "footprint": {
+      "length_ft": 4,
+      "width_ft": 2
+    },
+    "clearance_ft": 3,
+    "engineer_review_required": false,
+    "max_unassisted_height_ft": null,
+    "obstacles_relevant": [
+      "slope",
+      "fence_line"
+    ],
+    "materials": [
+      {
+        "id": "framing-2x4",
+        "category": "framing",
+        "unit": "linear_ft",
+        "quantity": 56,
+        "tiered": true
+      },
+      {
+        "id": "decking-boards",
+        "category": "decking",
+        "unit": "linear_ft",
+        "quantity": 48,
+        "tiered": true
+      },
+      {
+        "id": "deck-screws-2.5in",
+        "category": "fasteners",
+        "unit": "box_100",
+        "quantity": 1,
+        "tiered": false
+      },
+      {
+        "id": "tool-hooks",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 6,
+        "tiered": false
+      }
+    ],
+    "budget_estimate_reference": {
+      "pine": [
+        80,
+        110
+      ],
+      "cedar": [
+        140,
+        180
+      ],
+      "composite": [
+        230,
+        280
+      ]
+    },
+    "description": "A waist-height (about 36 in.) work surface with a slatted lower shelf for soil bags and a back rail with hooks for hand tools. A workstation for repotting and seed-starting next to the Raised Garden Bed rather than a second growing space. Needs 3 ft of clearance on the work side."
+  },
+  {
+    "id": "chore-tool-storage-bench",
+    "name": "Tool Storage Bench",
+    "category": "chore_easing",
+    "skill_level": "intermediate",
+    "build_time_hours": {
+      "min": 6,
+      "max": 8
+    },
+    "footprint": {
+      "length_ft": 5,
+      "width_ft": 2
+    },
+    "clearance_ft": 3,
+    "engineer_review_required": false,
+    "max_unassisted_height_ft": null,
+    "obstacles_relevant": [
+      "slope",
+      "fence_line"
+    ],
+    "materials": [
+      {
+        "id": "framing-2x4",
+        "category": "framing",
+        "unit": "linear_ft",
+        "quantity": 40,
+        "tiered": true
+      },
+      {
+        "id": "decking-boards",
+        "category": "decking",
+        "unit": "linear_ft",
+        "quantity": 80,
+        "tiered": true
+      },
+      {
+        "id": "deck-screws-2.5in",
+        "category": "fasteners",
+        "unit": "box_100",
+        "quantity": 2,
+        "tiered": false
+      },
+      {
+        "id": "lid-hinges",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 3,
+        "tiered": false
+      },
+      {
+        "id": "lid-stay-hinges",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 2,
+        "tiered": false
+      },
+      {
+        "id": "corner-brackets",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 4,
+        "tiered": false
+      }
+    ],
+    "budget_estimate_reference": {
+      "pine": [
+        110,
+        150
+      ],
+      "cedar": [
+        190,
+        240
+      ],
+      "composite": [
+        300,
+        360
+      ]
+    },
+    "description": "A seat-height bench with a lift-up lid over a weather-resistant box sized for long-handled tools, gloves, and hose fittings. Lid-stay hinges keep the lid from slamming shut, which matters in homes with kids. Needs 3 ft of clearance for the lid to open. The most expensive chore-easing build in the library."
+  },
+  {
+    "id": "chore-hose-holder-post",
+    "name": "Hose Holder Post",
+    "category": "chore_easing",
+    "skill_level": "beginner",
+    "build_time_hours": {
+      "min": 1,
+      "max": 2
+    },
+    "footprint": {
+      "length_ft": 2,
+      "width_ft": 2
+    },
+    "clearance_ft": 2,
+    "engineer_review_required": false,
+    "max_unassisted_height_ft": null,
+    "obstacles_relevant": [
+      "utility_lines"
+    ],
+    "materials": [
+      {
+        "id": "framing-4x4",
+        "category": "framing",
+        "unit": "linear_ft",
+        "quantity": 6,
+        "tiered": true
+      },
+      {
+        "id": "decking-boards",
+        "category": "decking",
+        "unit": "linear_ft",
+        "quantity": 4,
+        "tiered": true
+      },
+      {
+        "id": "deck-screws-2.5in",
+        "category": "fasteners",
+        "unit": "box_100",
+        "quantity": 1,
+        "tiered": false
+      },
+      {
+        "id": "hose-hanger",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 1,
+        "tiered": false
+      },
+      {
+        "id": "post-ground-spike",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 1,
+        "tiered": false
+      }
+    ],
+    "budget_estimate_reference": {
+      "pine": [
+        25,
+        40
+      ],
+      "cedar": [
+        40,
+        60
+      ],
+      "composite": [
+        70,
+        95
+      ]
+    },
+    "description": "A single 4x4 post with a hose hanger and a small nozzle shelf, set on a ground spike or a buried footing next to the spigot. Keeps the hose coiled and off the lawn. Either option means digging, so call 811 to have buried utility lines marked first."
+  },
+  {
+    "id": "chore-toy-storage-box",
+    "name": "Outdoor Toy Storage Box",
+    "category": "chore_easing",
+    "skill_level": "beginner",
+    "build_time_hours": {
+      "min": 3,
+      "max": 4
+    },
+    "footprint": {
+      "length_ft": 4,
+      "width_ft": 2
+    },
+    "clearance_ft": 3,
+    "engineer_review_required": false,
+    "max_unassisted_height_ft": null,
+    "obstacles_relevant": [
+      "fence_line"
+    ],
+    "materials": [
+      {
+        "id": "framing-2x4",
+        "category": "framing",
+        "unit": "linear_ft",
+        "quantity": 24,
+        "tiered": true
+      },
+      {
+        "id": "decking-boards",
+        "category": "decking",
+        "unit": "linear_ft",
+        "quantity": 48,
+        "tiered": true
+      },
+      {
+        "id": "deck-screws-2in",
+        "category": "fasteners",
+        "unit": "box_100",
+        "quantity": 1,
+        "tiered": false
+      },
+      {
+        "id": "lid-hinges",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 2,
+        "tiered": false
+      },
+      {
+        "id": "lid-support-torsion",
+        "category": "hardware",
+        "unit": "each",
+        "quantity": 2,
+        "tiered": false
+      }
+    ],
+    "budget_estimate_reference": {
+      "pine": [
+        60,
+        85
+      ],
+      "cedar": [
+        100,
+        130
+      ],
+      "composite": [
+        170,
+        210
+      ]
+    },
+    "description": "A slatted, ventilated storage box with a drainage floor for balls, sand toys, and outdoor gear. Counted as chore-easing because it tackles a recurring cleanup task. Following CPSC toy chest guidance, it has no latch, keeps its ventilation gaps, and uses lid supports that hold the lid open in any position. Needs 3 ft of clearance for the lid."
   }
 ]

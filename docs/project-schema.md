@@ -82,6 +82,8 @@ Footprint and clearance convert directly from Austin's existing text (no new res
 
 `obstacles_relevant` and `materials`: these need a content decision per project (which obstacles genuinely apply, what's actually in each build) rather than a guess from the schema doc — flagged as open questions below, not filled in here for all 8.
 
+**Update (Nov 4, 2026):** The library is now 18 projects. The 10 new entries come from `docs/Seed Project Library Expansion.docx` (dimensions, build times, skill levels, and reference budgets as written there), each with a full `materials` BOM. `obstacles_relevant` is now filled on every project, so nothing is left in `pending_fields`. Projects that involve digging (sandbox, swing set anchors, raised bed, hose post footing) all list `utility_lines`. All 18 remain `engineer_review_required: false` with no `max_unassisted_height_ft`. Content-specific safety rules (no latch on the toy box, lid stays on lidded storage, `utility_lines` on digging projects) are pinned by `backend/test/seedProjectSafety.test.js`.
+
 ## Open questions
 
 - Who actually reshapes the 8 seed projects into this schema — Austin (owns the content) or whoever needs it first? Proposing Austin, since `engineer_review_required` and `obstacles_relevant` require judgment calls about the actual builds that only the content owner can make confidently.

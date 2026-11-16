@@ -43,6 +43,12 @@ terminal, start it with `npm install && npm start` inside `backend/`
   shows beginner and intermediate. Time comes from `build_time_hours.max`,
   skill from `skill_level`. Change `TIME_LIMITS` / `SKILL_ORDER` if the
   team wants different cut-offs.
+- **My Projects** (`src/screens/MyProjects.jsx`, `src/lib/savedProjects.js`, tests in
+  `savedProjects.test.js`). "Save to My Projects" on a project page stores the project's
+  id in the browser (localStorage key `handydad_saved_projects`), so the list survives a
+  reload and is per browser; there are no accounts yet. Ids that no longer exist in the
+  library are skipped. If the browser blocks storage, saving still works for the current
+  visit and the screens say the list won't be kept.
 - **Navigation** (`src/App.jsx`) is simple React state, not a router.
   Fine for four screens; worth moving to a real router if more screens
   get added.

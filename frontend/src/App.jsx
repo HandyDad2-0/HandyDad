@@ -5,6 +5,9 @@ import EnterDimensions from "./screens/EnterDimensions.jsx";
 import SpaceCheckResults from "./screens/SpaceCheckResults.jsx";
 import MonthlyChallenge from "./screens/MonthlyChallenge.jsx";
 import DescribeIdea from "./screens/DescribeIdea.jsx";
+import MyProjects from "./screens/MyProjects.jsx";
+import { loadSaved, saveList, addSaved, removeSaved, visibleSaved, SAVED_KEY } from "./lib/savedProjects.js";
+import { getProjectById } from "./data/projects.js";
 
 const LIBRARY_SCREENS = ["library", "detail", "dimensions", "results", "idea"];
 
@@ -13,6 +16,10 @@ const LIBRARY_SCREENS = ["library", "detail", "dimensions", "results", "idea"];
 // to need real URLs/deep-linking.
 export default function App() {
   const [screen, setScreen] = useState({ name: "library" });
+  // Saved ("My Projects") ids live here so the detail page, the My Projects
+  // screen and the nav count always agree. Persisted to localStorage.
+  const [savedIds, setSavedIds] = useState(loadSaved);
+  const [storageOk, setStorageOk] = useState(true);
   const lastScreenKey = useRef(null);
 
   // The app swaps screens with state instead of real page loads, so
@@ -33,6 +40,22 @@ export default function App() {
     }
   }, [screen.name, screen.projectId]);
 
+  function updateSaved(next) {
+    setSavedIds(next);
+    setStorageOk(saveList(next));
+  }
+
+  // Keep other open tabs in step: a change made in one tab shows in the rest.
+  useEffect(() => {
+    function onStorage(e) {
+      if (e.key === SAVED_KEY || e.key === null) setSavedIds(loadSaved());
+    }
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  // Count only projects that still exist, so the nav always matches the list.
+  const savedCount = visibleSaved(savedIds, getProjectById).length;
   const libraryActive = LIBRARY_SCREENS.includes(screen.name);
 
   return (
@@ -57,6 +80,13 @@ export default function App() {
           >
             Monthly Challenge
           </button>
+          <button
+            className={`nav-tab ${screen.name === "saved" ? "active" : ""}`}
+            aria-current={screen.name === "saved" ? "page" : undefined}
+            onClick={() => setScreen({ name: "saved" })}
+          >
+            My Projects{savedCount > 0 ? ` (${savedCount})` : ""}
+          </button>
         </nav>
       </header>
 
@@ -72,16 +102,20 @@ export default function App() {
       {screen.name === "detail" && (
         <ProjectDetail
           projectId={screen.projectId}
-          onBack={() => setScreen({ name: "library" })}
-          onCheckSpace={(id) => setScreen({ name: "dimensions", projectId: id })}
+          from={screen.from}
+          isSaved={savedIds.includes(screen.projectId)}
+          onToggleSaved={(id) => updateSaved(savedIds.includes(id) ? removeSaved(savedIds, id) : addSaved(savedIds, id))}
+          storageOk={storageOk}
+          onBack={() => setScreen({ name: screen.from === "saved" ? "saved" : "library" })}
+          onCheckSpace={(id) => setScreen({ name: "dimensions", projectId: id, from: screen.from })}
         />
       )}
 
       {screen.name === "dimensions" && (
         <EnterDimensions
           projectId={screen.projectId}
-          onBack={() => setScreen({ name: "detail", projectId: screen.projectId })}
-          onSubmit={(input) => setScreen({ name: "results", projectId: screen.projectId, input })}
+          onBack={() => setScreen({ name: "detail", projectId: screen.projectId, from: screen.from })}
+          onSubmit={(input) => setScreen({ name: "results", projectId: screen.projectId, input, from: screen.from })}
         />
       )}
 
@@ -97,6 +131,16 @@ export default function App() {
         <DescribeIdea
           onBack={() => setScreen({ name: "library" })}
           onSelectProject={(id) => setScreen({ name: "detail", projectId: id })}
+        />
+      )}
+
+      {screen.name === "saved" && (
+        <MyProjects
+          savedIds={savedIds}
+          storageOk={storageOk}
+          onSelectProject={(id) => setScreen({ name: "detail", projectId: id, from: "saved" })}
+          onRemove={(id) => updateSaved(removeSaved(savedIds, id))}
+          onBrowse={() => setScreen({ name: "library" })}
         />
       )}
 

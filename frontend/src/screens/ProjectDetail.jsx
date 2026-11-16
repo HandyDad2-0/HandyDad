@@ -1,13 +1,17 @@
+import { useState } from "react";
 import AskHandyDad from "../components/AskHandyDad.jsx";
 import { getProjectById, CATEGORY_LABELS, SKILL_LABELS, timeBucket } from "../data/projects.js";
 
-export default function ProjectDetail({ projectId, onBack, onCheckSpace }) {
+export default function ProjectDetail({ projectId, from, isSaved, onToggleSaved, storageOk = true, onBack, onCheckSpace }) {
   const project = getProjectById(projectId);
+  const [announcement, setAnnouncement] = useState("");
   if (!project) return <p className="main-content">Project not found.</p>;
 
   return (
     <div className="main-content">
-      <button className="back-link" onClick={onBack}><span aria-hidden="true">&larr;</span> Back to Project Library</button>
+      <button className="back-link" onClick={onBack}>
+        <span aria-hidden="true">&larr;</span> {from === "saved" ? "Back to My Projects" : "Back to Project Library"}
+      </button>
 
       <div className="detail-layout">
         <div style={{ flex: "1.3", display: "flex", flexDirection: "column", gap: 20 }}>
@@ -53,7 +57,23 @@ export default function ProjectDetail({ projectId, onBack, onCheckSpace }) {
           <button className="btn-primary" onClick={() => onCheckSpace(project.id)}>
             Check My Space &amp; Get Materials List
           </button>
-          <button className="btn-secondary">Save to My Projects</button>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => {
+              onToggleSaved(project.id);
+              setAnnouncement(isSaved ? `${project.name} removed from My Projects.` : `${project.name} saved to My Projects.`);
+            }}
+          >
+            {isSaved ? "Remove from My Projects" : "Save to My Projects"}
+          </button>
+          {isSaved && <p className="saved-note" aria-hidden="true">&#10003; Saved to My Projects</p>}
+          <div className="sr-only" role="status" aria-live="polite">{announcement}</div>
+          {!storageOk && (
+            <div className="flag warn" role="status">
+              <div>This browser isn't letting HandyDad keep your saved projects, so they'll be gone when you reload.</div>
+            </div>
+          )}
           <AskHandyDad projectId={project.id} projectName={project.name} />
         </div>
       </div>

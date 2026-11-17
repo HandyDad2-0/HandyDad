@@ -56,12 +56,32 @@ What the Sprint 2 card added on top of that:
 - One server process only. The store is synchronous, which is what makes read-modify-write safe; two processes sharing one file would not be.
 - Behind a reverse proxy, set Express's `trust proxy` setting, otherwise every user shares the proxy's IP and therefore one rate-limit bucket.
 
+## Demo data
+
+The challenge starts empty every month, so a demo would show "No builds have been submitted this month yet." To fill the leaderboard with sample entries:
+
+```bash
+npm run seed:demo --prefix backend             # adds 5 sample builds, only if this month is empty
+npm run seed:demo --prefix backend -- --reset  # starts the month over first
+npm run seed:demo --prefix backend -- --force  # adds them even if there are already entries
+```
+
+Things to know before using it:
+
+- **These are made-up builds and made-up names** (`lib/demoSeed.js` has the list). They go through the real store, so nothing in the data marks them as samples. Tell your audience they are sample data.
+- **Run it after the month you are demoing has started.** The challenge resets at the end of each month. Anything seeded in November is archived on Dec 1, and the screen then shows an empty December. For a demo in early December, seed in December.
+- **It is safe by default.** With no flags it adds nothing if the month already has submissions. `--reset` moves the whole state file aside as `challenge-state.json.before-demo-<timestamp>` (it keeps the archive too, and never deletes anything); restore it by renaming it back over `challenge-state.json` while the backend is stopped.
+- **It works while the backend is running,** because the store re-reads its file on every request. Refresh the Monthly Challenge screen after seeding.
+- **Votes use ids like `demo-voter-1`,** so they never collide with a real browser's random voter id.
+- **The screen only shows the current month.** `GET /api/challenge/archive` exists, but no screen uses it yet, so last month's winner is not shown anywhere in the app.
+
 ## Tests
 
 `npm test` in `backend/` runs everything. The challenge tests are:
 
 - `test/challengeStore.test.js` (Sprint 1): empty initial state, adding a submission, voting, rejecting a duplicate vote, voting on a missing submission, and that closing a month archives it with the correct winner and starts a clean slate.
 - `test/challengeHardening.test.js` (Sprint 2): temp-file and backup handling, recovery from a corrupt or wrong-shaped state file, vote counts derived from voter lists, `voterId` validation, input limits and the monthly submission cap, the rate limiter (including recovery after the window), and the HTTP behaviour for bad JSON, oversized bodies, vote status codes, and 429s. These run against a temporary state file and never touch real data.
+- `test/demoSeed.test.js` (Sprint 3): the demo seed adds the sample builds with the expected votes, ranks them in order, refuses to add on top of existing submissions, and `--force` and `--reset` behave as documented (including keeping a backup).
 
 ## What's NOT done here
 

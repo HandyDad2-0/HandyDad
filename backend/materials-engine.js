@@ -14,20 +14,25 @@ export const TIERS = ["pine", "cedar", "composite"];
  * Only "tiered" categories need entries here. Update this table to
  * change pricing without touching any project's BOM data.
  */
-// Sourcing status (see docs/budget-materials.md for citations):
-//   framing.pine    - sourced, Home Depot, priced Sep 19, 2026
-//   framing.cedar   - ESTIMATE, pending sourcing (price loads via JS on
-//                     both Home Depot and Lowe's, not retrievable by
-//                     automated lookup; needs an in-store/screenshot check)
-//   framing.composite - ESTIMATE, and possibly not a real product at all —
-//                     composite lumber is sold as decking, not structural
-//                     framing. Flag for team decision.
-//   decking.pine    - sourced, Home Depot, priced Sep 19, 2026
-//   decking.cedar   - sourced, Home Depot, priced Sep 26, 2026
-//   decking.composite - sourced, Home Depot (Trex Enhance Basics), priced Sep 26, 2026
+// Sourcing status. Full citations (store, product, model, date) are in the
+// sources table in docs/budget-materials.md. All prices are Home Depot,
+// North Denton TX (76201).
+//   framing.pine      - 2x4 Prime Whitewood Stud, $3.72 / 7.72 ft, Nov 17, 2026
+//   framing.cedar     - average of 2x4x8 ($23.98) and 2x4x12 ($34.98) Rough
+//                       Green Western Red Cedar, Nov 17, 2026
+//   framing.composite - same as pine. Composite lumber is sold as decking,
+//                       not structural framing, so the composite tier is
+//                       pine framing under composite decking.
+//   decking.pine      - Sep 19, 2026
+//   decking.cedar     - Sep 26, 2026 (older than the others; recheck)
+//   decking.composite - Trex Enhance Naturals 1x6x16, $37.42 / 16 ft, Nov 17, 2026
+//
+// Resulting tier order for any project with decking: pine < composite < cedar.
+// (Composite decking is cheaper than cedar decking at retail; composite is
+// the low-maintenance option, not the most expensive one.)
 export const PRICE_CATALOG = {
-  framing: { pine: 0.50, cedar: 1.85, composite: 2.10 }, // $/linear_ft — cedar/composite still estimates, see above
-  decking: { pine: 0.95, cedar: 3.89, composite: 2.00 }, // $/linear_ft
+  framing: { pine: 0.48, cedar: 2.96, composite: 0.48 }, // $/linear_ft
+  decking: { pine: 0.95, cedar: 3.89, composite: 2.34 }, // $/linear_ft
 };
 
 /**

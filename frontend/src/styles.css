@@ -535,6 +535,11 @@ input[type="number"] {
   margin-right: 4px;
 }
 
+.flag-next-step {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
 fieldset.obstacles {
   border: 0;
   margin: 0;

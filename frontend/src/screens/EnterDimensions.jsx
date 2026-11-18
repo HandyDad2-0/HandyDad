@@ -4,6 +4,19 @@ import { convert, formatLength } from "../lib/units.js";
 
 const UNIT_LABEL = { ft: "ft", m: "m" };
 
+// docs/space-measurement.md "Input Fields & Units": surface type is its own
+// field, separate from "known obstructions" below. Only "sloped" currently
+// drives a flagging rule (dimension-fit-engine.js's obstacle_conflict check
+// via obstacles_relevant); grass/concrete/deck are collected for now with
+// no rule attached, same as any other field waiting on a future rule.
+const SURFACE_TYPES = [
+  { value: "flat", label: "Flat" },
+  { value: "sloped", label: "Sloped" },
+  { value: "grass", label: "Grass" },
+  { value: "concrete", label: "Concrete" },
+  { value: "deck", label: "Deck" },
+];
+
 export default function EnterDimensions({ projectId, onBack, onSubmit }) {
   const project = getProjectById(projectId);
   // docs/space-measurement.md "Units decision": feet is the default input
@@ -19,7 +32,7 @@ export default function EnterDimensions({ projectId, onBack, onSubmit }) {
     entered_height_ft: "",
     setback_required_ft: "",
     distance_to_property_line_ft: "",
-    sloped: false,
+    surfaceType: "flat",
     attachedToStructure: false,
     hasTree: false,
     hasFenceLine: false,
@@ -118,6 +131,10 @@ export default function EnterDimensions({ projectId, onBack, onSubmit }) {
       entered_height_ft: needsHeight ? toFeet(entered_height_ft) : null,
       setback_required_ft: hasSetbackPair ? toFeet(form.setback_required_ft) : null,
       distance_to_property_line_ft: hasSetbackPair ? toFeet(form.distance_to_property_line_ft) : null,
+      // The dimension-fit engine only knows a "sloped" boolean (Austin's
+      // obstacle_conflict rule) - grass/concrete/deck don't have a rule
+      // attached yet, so only "sloped" affects the space check for now.
+      sloped: form.surfaceType === "sloped",
     });
   }
 
@@ -182,9 +199,26 @@ export default function EnterDimensions({ projectId, onBack, onSubmit }) {
           )}
 
           <fieldset className="obstacles">
+            <legend>Surface type</legend>
+            <div className="chip-row" role="radiogroup" aria-label="Surface type">
+              {SURFACE_TYPES.map((type) => (
+                <button
+                  key={type.value}
+                  type="button"
+                  className={`chip ${form.surfaceType === type.value ? "active" : ""}`}
+                  role="radio"
+                  aria-checked={form.surfaceType === type.value}
+                  onClick={() => update("surfaceType", type.value)}
+                >
+                  {type.label}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset className="obstacles">
             <legend>Known obstacles nearby</legend>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              <CheckRow label="Sloped ground" checked={form.sloped} onChange={(v) => update("sloped", v)} />
               <CheckRow label="Attached to an existing structure (deck, wall, or roof)" checked={form.attachedToStructure} onChange={(v) => update("attachedToStructure", v)} />
               <CheckRow label="Tree or large root system in the area" checked={form.hasTree} onChange={(v) => update("hasTree", v)} />
               <CheckRow label="Fence line or property boundary nearby" checked={form.hasFenceLine} onChange={(v) => update("hasFenceLine", v)} />

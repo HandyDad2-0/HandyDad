@@ -17,6 +17,8 @@ export default function EnterDimensions({ projectId, onBack, onSubmit }) {
     width_ft: "",
     clearance_ft: "",
     entered_height_ft: "",
+    setback_required_ft: "",
+    distance_to_property_line_ft: "",
     sloped: false,
     attachedToStructure: false,
     hasTree: false,
@@ -39,7 +41,7 @@ export default function EnterDimensions({ projectId, onBack, onSubmit }) {
     if (nextUnit === unit) return;
     setForm((f) => {
       const next = { ...f };
-      for (const field of ["length_ft", "width_ft", "clearance_ft", "entered_height_ft"]) {
+      for (const field of ["length_ft", "width_ft", "clearance_ft", "entered_height_ft", "setback_required_ft", "distance_to_property_line_ft"]) {
         if (f[field] === "" || Number.isNaN(Number(f[field]))) continue;
         next[field] = Math.round(convert(Number(f[field]), unit, nextUnit) * 100) / 100;
       }
@@ -88,6 +90,13 @@ export default function EnterDimensions({ projectId, onBack, onSubmit }) {
       fail("Dimensions must be greater than zero.", notPositive);
       return;
     }
+    // The setback check only means something as a pair - catch a half-filled
+    // pair here rather than silently dropping the one value the user did enter.
+    const setbackFilled = [form.setback_required_ft !== "", form.distance_to_property_line_ft !== ""];
+    if (setbackFilled[0] !== setbackFilled[1]) {
+      fail("Enter both the required setback and the distance to the property line, or leave both blank.", ["setback-required", "setback-distance"]);
+      return;
+    }
     setError(null);
     setInvalid([]);
     // The API and dimension-fit engine work in feet only (see units.js);
@@ -97,12 +106,18 @@ export default function EnterDimensions({ projectId, onBack, onSubmit }) {
     // round-trip doesn't leak float noise like 10.006561679790027 into the
     // results screen.
     const toFeet = (value) => Math.round(convert(Number(value), unit, "ft") * 100) / 100;
+    // Setback is optional and only meaningful as a pair (docs/space-measurement.md
+    // "Setbacks") - if the user only filled in one of the two fields, there's
+    // nothing to compare, so send null rather than guessing at the other.
+    const hasSetbackPair = form.setback_required_ft !== "" && form.distance_to_property_line_ft !== "";
     onSubmit({
       ...form,
       length_ft: toFeet(length_ft),
       width_ft: toFeet(width_ft),
       clearance_ft: toFeet(clearance_ft),
       entered_height_ft: needsHeight ? toFeet(entered_height_ft) : null,
+      setback_required_ft: hasSetbackPair ? toFeet(form.setback_required_ft) : null,
+      distance_to_property_line_ft: hasSetbackPair ? toFeet(form.distance_to_property_line_ft) : null,
     });
   }
 
@@ -174,6 +189,44 @@ export default function EnterDimensions({ projectId, onBack, onSubmit }) {
               <CheckRow label="Tree or large root system in the area" checked={form.hasTree} onChange={(v) => update("hasTree", v)} />
               <CheckRow label="Fence line or property boundary nearby" checked={form.hasFenceLine} onChange={(v) => update("hasFenceLine", v)} />
               <CheckRow label="Known underground utility lines" checked={form.hasUtilityLines} onChange={(v) => update("hasUtilityLines", v)} />
+            </div>
+          </fieldset>
+
+          <fieldset className="obstacles">
+            <legend>
+              Setback from your property line (optional) &mdash; a setback is the minimum distance local rules
+              require between a structure and your property line. HandyDad doesn&rsquo;t know your local rule;
+              check your city or county, or a recent survey/plot plan, if you want this checked.
+            </legend>
+            <div className="form-grid-3">
+              <div>
+                <label htmlFor="setback-required">Required setback ({UNIT_LABEL[unit]})</label>
+                <input
+                  id="setback-required"
+                  type="number"
+                  inputMode="decimal"
+                  min="0"
+                  step="any"
+                  aria-invalid={invalid.includes("setback-required")}
+                  aria-describedby={error ? "dim-error" : undefined}
+                  value={form.setback_required_ft}
+                  onChange={(e) => update("setback_required_ft", e.target.value)}
+                />
+              </div>
+              <div>
+                <label htmlFor="setback-distance">Distance to property line ({UNIT_LABEL[unit]})</label>
+                <input
+                  id="setback-distance"
+                  type="number"
+                  inputMode="decimal"
+                  min="0"
+                  step="any"
+                  aria-invalid={invalid.includes("setback-distance")}
+                  aria-describedby={error ? "dim-error" : undefined}
+                  value={form.distance_to_property_line_ft}
+                  onChange={(e) => update("distance_to_property_line_ft", e.target.value)}
+                />
+              </div>
             </div>
           </fieldset>
 

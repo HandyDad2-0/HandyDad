@@ -13,11 +13,29 @@ async function readJson(res) {
 // POST /api/dimension-fit -> { flags, hasBlockingFlags }
 // Throws on network failure, a non-2xx response, or a malformed body, with a
 // message good enough to show the user directly.
-export async function checkDimensionFit({ projectId, length_ft, width_ft, clearance_ft, entered_height_ft, obstacles }) {
+export async function checkDimensionFit({
+  projectId,
+  length_ft,
+  width_ft,
+  clearance_ft,
+  entered_height_ft,
+  setback_required_ft,
+  distance_to_property_line_ft,
+  obstacles,
+}) {
   const res = await fetch("/api/dimension-fit", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ projectId, length_ft, width_ft, clearance_ft, entered_height_ft, obstacles }),
+    body: JSON.stringify({
+      projectId,
+      length_ft,
+      width_ft,
+      clearance_ft,
+      entered_height_ft,
+      setback_required_ft,
+      distance_to_property_line_ft,
+      obstacles,
+    }),
   });
   const body = await readJson(res);
   if (!res.ok) {

@@ -98,8 +98,16 @@ export default function SpaceCheckResults({ projectId, input, onEditDimensions }
         {flags.map((flag, i) => (
           <div className={`flag ${SEVERITY_CLASS[flag.severity]}`} key={i}>
             <div>
-              <span className="flag-label">{SEVERITY_LABEL[flag.severity]}</span>
-              {flag.text}
+              <div>
+                <span className="flag-label">{SEVERITY_LABEL[flag.severity]}</span>
+                {flag.text}
+              </div>
+              {flag.nextStep && (
+                <div className="flag-next-step">
+                  <span className="flag-label">What to do:</span>
+                  {flag.nextStep}
+                </div>
+              )}
             </div>
           </div>
         ))}

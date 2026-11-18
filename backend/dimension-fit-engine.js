@@ -34,6 +34,17 @@ const OBSTACLE_LABELS = {
   utility_lines: "utility lines",
 };
 
+// Plain-language "what to do about it" for each obstacle, shown alongside
+// the flag text. Utility lines gets a concrete, specific action (call
+// 811) rather than a vague "double check" — digging near a line is the
+// one obstacle here with a real safety consequence, not just a design one.
+const OBSTACLE_NEXT_STEPS = {
+  slope: "Walk the spot again with this in mind before you commit to it - a slope can change how stable the build feels.",
+  tree: "Walk the spot again with this in mind before you commit to it - roots or branches can get in the way as the project goes in.",
+  fence_line: "Walk the spot again with this in mind before you commit to it - check it won't crowd the fence or a neighbor's side.",
+  utility_lines: "Call 811 (or your local utility locator) to get lines marked before you dig.",
+};
+
 /**
  * @param {Object} project - a project from data/seed-projects.json
  * @param {Object} input
@@ -47,7 +58,7 @@ const OBSTACLE_LABELS = {
  * @param {boolean} input.hasTree
  * @param {boolean} input.hasFenceLine
  * @param {boolean} input.hasUtilityLines
- * @returns {{ flags: Array<{ rule: string, severity: "blocking"|"advisory"|"advisory-strong", text: string }>, hasBlockingFlags: boolean }}
+ * @returns {{ flags: Array<{ rule: string, severity: "blocking"|"advisory"|"advisory-strong", text: string, nextStep: string }>, hasBlockingFlags: boolean }}
  */
 export function checkFit(project, input) {
   const flags = [];
@@ -62,7 +73,8 @@ export function checkFit(project, input) {
     flags.push({
       rule: "engineer_review",
       severity: "advisory",
-      text: "This build involves structural work that typically needs a permit or engineer sign-off - check your local codes before starting.",
+      text: "This build involves structural work that typically needs a permit or engineer sign-off.",
+      nextStep: "Check with your local building department, or have a licensed engineer sign off, before you start.",
     });
   }
 
@@ -73,7 +85,8 @@ export function checkFit(project, input) {
     flags.push({
       rule: "attached_to_structure",
       severity: "advisory",
-      text: "You noted this build attaches to an existing structure (deck, wall, or roof). Load-bearing capacity needs manual verification before building.",
+      text: "You noted this build attaches to an existing structure (deck, wall, or roof).",
+      nextStep: "Before attaching anything, have someone confirm the structure can safely hold the extra weight.",
     });
   }
 
@@ -85,7 +98,8 @@ export function checkFit(project, input) {
     flags.push({
       rule: "fits_in_space",
       severity: "blocking",
-      text: `This project needs about ${project.footprint.length_ft} x ${project.footprint.width_ft} ft - your space is ${input.length_ft} x ${input.width_ft} ft. It may not fit as designed.`,
+      text: `This project needs about ${project.footprint.length_ft} x ${project.footprint.width_ft} ft - your space is ${input.length_ft} x ${input.width_ft} ft, so it may not fit as designed.`,
+      nextStep: "Try a smaller version of this project, or pick one with a smaller footprint.",
     });
   }
 
@@ -96,6 +110,7 @@ export function checkFit(project, input) {
       rule: "has_clearance",
       severity: "blocking",
       text: `This project needs ${project.clearance_ft} ft of clearance to build and use safely - you entered ${input.clearance_ft} ft.`,
+      nextStep: "Choose a spot with more room around it, or pick a project that needs less clearance.",
     });
   }
 
@@ -115,7 +130,8 @@ export function checkFit(project, input) {
     flags.push({
       rule: "obstacle_conflict",
       severity: obstacle === "utility_lines" ? "advisory-strong" : "advisory",
-      text: `You noted a ${OBSTACLE_LABELS[obstacle]} in this area - double check it won't interfere with the build.`,
+      text: `You noted a ${OBSTACLE_LABELS[obstacle]} in this area, which can interfere with this build.`,
+      nextStep: OBSTACLE_NEXT_STEPS[obstacle],
     });
   }
 

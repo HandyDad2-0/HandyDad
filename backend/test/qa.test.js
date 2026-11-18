@@ -17,14 +17,25 @@ async function postQuestion(body) {
   }
 }
 
-test("valid project question returns an honest, stable stub contract", async () => {
-  const result = await postQuestion({ projectId: "kid-backyard-sandbox", question: "Can I change the framing?" });
-  assert.equal(result.status, 501);
+test("a question answerable from approved project data returns a sourced answer", async () => {
+  const result = await postQuestion({ projectId: "kid-backyard-sandbox", question: "What materials do I need?" });
+  assert.equal(result.status, 200);
   assert.deepEqual(result.body, {
-    code: "QA_NOT_IMPLEMENTED",
-    message: "Build question answers are not available yet.",
     projectId: "kid-backyard-sandbox",
+    status: "verified",
+    answer: "The approved catalog lists: 16 linear_ft of Framing 2x4; 16 linear_ft of Decking Boards; 1 box_100 of Deck Screws 2in; 4 each of Corner Brackets.",
+    sources: [{ source: "data/seed-projects.json", projectId: "kid-backyard-sandbox", field: "materials", label: "Approved materials list" }]
+  });
+});
+
+test("a question outside the approved data (e.g. safety) is honestly declined, not guessed at", async () => {
+  const result = await postQuestion({ projectId: "kid-backyard-sandbox", question: "Is this safe to build near a fence?" });
+  assert.equal(result.status, 200);
+  assert.deepEqual(result.body, {
+    projectId: "kid-backyard-sandbox",
+    status: "cannot_verify",
     answer: null,
+    message: "This question cannot be verified from the approved HandyDad project data. Check applicable local requirements or a qualified professional for safety, structural, electrical, plumbing, or code decisions.",
     sources: []
   });
 });

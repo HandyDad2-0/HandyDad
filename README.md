@@ -77,19 +77,30 @@ Currently in **Capstone I, Sprint 0** — establishing scope, requirements, and 
 
 ## Getting Started
 
-Setup instructions will be added once the initial project scaffold is in place.
+**Prerequisite:** [Node.js](https://nodejs.org/) with npm. We develop and test on Node 22; other recent versions should work.
+
+From a fresh clone, two commands get the app running:
 
 ```bash
 git clone https://github.com/HandyDad2-0/HandyDad.git
 cd HandyDad
-cd backend && npm install && cd ..
-cd frontend && npm install && cd ..
+npm run setup   # once: installs backend and frontend dependencies
+npm start       # starts the backend and the frontend together
 ```
 
-Run the app locally with two terminals:
+Then open **http://localhost:5173**. The backend API runs on http://localhost:3001 and the frontend proxies `/api` to it, so there is nothing else to configure. Output from the two sides is labelled `[api]` and `[web]` in the same terminal. Press **Ctrl+C** to stop both.
+
+If something goes wrong:
+
+- **"Dependencies are not installed"**: run `npm run setup` from the repo root.
+- **`[api]` says the port is already in use**: another copy of the backend is still running on port 3001. Stop it, or start this one on a different port with `PORT=3002 npm start` (macOS/Linux). The frontend proxy is set to 3001, so for a different port also change `proxy` in `frontend/vite.config.js`.
+- **The frontend shows a different port than 5173**: Vite picks the next free port if 5173 is taken. Use the URL it prints.
+- **Challenge data**: submissions and votes are saved to `backend/data/challenge-state.json` (not committed), so they survive restarts. Delete that file to start the challenge fresh.
+
+Prefer two terminals? That still works:
 
 ```bash
-cd backend && npm start   # http://localhost:3001
+cd backend && npm start     # http://localhost:3001
 cd frontend && npm run dev  # http://localhost:5173
 ```
 

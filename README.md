@@ -104,6 +104,19 @@ cd backend && npm start     # http://localhost:3001
 cd frontend && npm run dev  # http://localhost:5173
 ```
 
+### Or with Docker
+
+If you have Docker installed, this runs the whole app (backend + frontend) with one command — no local Node install needed:
+
+```bash
+docker compose up --build
+```
+
+- Frontend: http://localhost:8080
+- Backend API: http://localhost:3001
+
+Stop it with `Ctrl+C`, or `docker compose down` to also remove the containers.
+
 ## Running Tests
 
 Run everything (backend + frontend) from the repo root with one command:

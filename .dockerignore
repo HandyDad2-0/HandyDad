@@ -1,0 +1,10 @@
+node_modules
+**/node_modules
+frontend/dist
+.git
+.github
+.codex
+docs
+*.md
+npm-debug.log
+.env

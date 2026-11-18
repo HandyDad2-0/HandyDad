@@ -105,3 +105,35 @@ test("entered_height_ft, when supplied, is still validated even for a project wi
   assert.equal(result.status, 400);
   assert.equal(result.body.code, "INVALID_HEIGHT");
 });
+
+test("setback_required_ft and distance_to_property_line_ft are each validated when present", async () => {
+  for (const body of [
+    { ...validBody, setback_required_ft: -1 },
+    { ...validBody, setback_required_ft: "far" },
+    { ...validBody, distance_to_property_line_ft: 0 },
+    { ...validBody, distance_to_property_line_ft: "close" },
+  ]) {
+    const result = await postDimensionFit(body);
+    assert.equal(result.status, 400, JSON.stringify(body));
+    assert.equal(result.body.code, "INVALID_SETBACK");
+  }
+});
+
+test("a confirmed setback violation produces a blocking flag through the real endpoint", async () => {
+  const result = await postDimensionFit({
+    ...validBody,
+    setback_required_ft: 10,
+    distance_to_property_line_ft: 2,
+  });
+  assert.equal(result.status, 200);
+  assert.equal(result.body.hasBlockingFlags, true);
+  const flag = result.body.flags.find((f) => f.rule === "setback");
+  assert.ok(flag);
+  assert.equal(flag.severity, "blocking");
+});
+
+test("setback fields are optional; omitting both runs no setback check", async () => {
+  const result = await postDimensionFit(validBody);
+  assert.equal(result.status, 200);
+  assert.equal(result.body.flags.some((f) => f.rule === "setback"), false);
+});

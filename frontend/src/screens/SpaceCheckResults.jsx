@@ -35,6 +35,8 @@ export default function SpaceCheckResults({ projectId, input, onEditDimensions }
       width_ft: input.width_ft,
       clearance_ft: input.clearance_ft,
       entered_height_ft: input.entered_height_ft ?? null,
+      setback_required_ft: input.setback_required_ft ?? null,
+      distance_to_property_line_ft: input.distance_to_property_line_ft ?? null,
       obstacles: {
         sloped: input.sloped,
         attachedToStructure: input.attachedToStructure,

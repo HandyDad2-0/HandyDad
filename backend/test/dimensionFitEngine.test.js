@@ -101,3 +101,34 @@ test("engineer_review_required and a height over threshold both trigger Rule 3, 
   const overThreshold = checkFit(heightThreshold, { ...baseInput, length_ft: 5, width_ft: 5, clearance_ft: 4, entered_height_ft: 7 });
   assert.equal(overThreshold.flags.some((f) => f.rule === "engineer_review"), true);
 });
+
+test("setback: flags only when the user confirms both a required setback and it's violated", () => {
+  const fits = { ...baseInput, length_ft: 5, width_ft: 5, clearance_ft: 4 };
+
+  // Neither field supplied: no check runs at all.
+  const neither = checkFit(sandbox, fits);
+  assert.equal(neither.flags.some((f) => f.rule === "setback"), false);
+
+  // Only one of the two supplied: still skipped, since we can't tell if it's
+  // actually violated without both numbers.
+  const onlyRequired = checkFit(sandbox, { ...fits, setback_required_ft: 10 });
+  assert.equal(onlyRequired.flags.some((f) => f.rule === "setback"), false);
+  const onlyDistance = checkFit(sandbox, { ...fits, distance_to_property_line_ft: 3 });
+  assert.equal(onlyDistance.flags.some((f) => f.rule === "setback"), false);
+
+  // Both supplied, and the spot is closer than required: blocks.
+  const violated = checkFit(sandbox, { ...fits, setback_required_ft: 10, distance_to_property_line_ft: 3 });
+  const flag = violated.flags.find((f) => f.rule === "setback");
+  assert.ok(flag);
+  assert.equal(flag.severity, "blocking");
+  assert.match(flag.text, /10 ft setback/);
+  assert.match(flag.text, /3 ft from the property line/);
+  assert.equal(typeof flag.nextStep, "string");
+  assert.ok(flag.nextStep.length > 0);
+
+  // Both supplied, and the spot meets or exceeds the requirement: no flag.
+  const meetsIt = checkFit(sandbox, { ...fits, setback_required_ft: 10, distance_to_property_line_ft: 10 });
+  assert.equal(meetsIt.flags.some((f) => f.rule === "setback"), false);
+  const exceedsIt = checkFit(sandbox, { ...fits, setback_required_ft: 10, distance_to_property_line_ft: 25 });
+  assert.equal(exceedsIt.flags.some((f) => f.rule === "setback"), false);
+});

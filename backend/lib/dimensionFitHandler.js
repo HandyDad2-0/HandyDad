@@ -18,13 +18,14 @@ function isValidDimension(value, max) {
 
 /**
  * POST /api/dimension-fit
- * Body: { projectId, length_ft, width_ft, clearance_ft, entered_height_ft?, obstacles? }
+ * Body: { projectId, length_ft, width_ft, clearance_ft, entered_height_ft?,
+ *         setback_required_ft?, distance_to_property_line_ft?, obstacles? }
  * obstacles: { sloped?, attachedToStructure?, hasTree?, hasFenceLine?, hasUtilityLines? }
  * -> { flags, hasBlockingFlags } (see dimension-fit-engine.js for the shape of each flag)
  */
 export function handleDimensionFit(req, res) {
   const body = req.body ?? {};
-  const { projectId, length_ft, width_ft, clearance_ft, entered_height_ft, obstacles } = body;
+  const { projectId, length_ft, width_ft, clearance_ft, entered_height_ft, setback_required_ft, distance_to_property_line_ft, obstacles } = body;
 
   if (typeof projectId !== "string" || !projectId.trim()) {
     return res.status(400).json({
@@ -78,6 +79,24 @@ export function handleDimensionFit(req, res) {
     heightFt = entered_height_ft;
   }
 
+  // Both are optional and independent of each other here - the engine only
+  // runs the setback check when both end up present, same "validated if
+  // supplied, never required" treatment as entered_height_ft above.
+  if (setback_required_ft != null && !isValidDimension(setback_required_ft, MAX_DIMENSION_FT)) {
+    return res.status(400).json({
+      code: "INVALID_SETBACK",
+      message: `setback_required_ft must be a finite number greater than 0 and at most ${MAX_DIMENSION_FT}.`,
+      fields: ["setback_required_ft"],
+    });
+  }
+  if (distance_to_property_line_ft != null && !isValidDimension(distance_to_property_line_ft, MAX_DIMENSION_FT)) {
+    return res.status(400).json({
+      code: "INVALID_SETBACK",
+      message: `distance_to_property_line_ft must be a finite number greater than 0 and at most ${MAX_DIMENSION_FT}.`,
+      fields: ["distance_to_property_line_ft"],
+    });
+  }
+
   const obstacleInput = obstacles ?? {};
   const badObstacleFields = OBSTACLE_FIELDS.filter(
     (field) => obstacleInput[field] != null && typeof obstacleInput[field] !== "boolean"
@@ -95,6 +114,8 @@ export function handleDimensionFit(req, res) {
     width_ft,
     clearance_ft,
     entered_height_ft: heightFt,
+    setback_required_ft: setback_required_ft ?? null,
+    distance_to_property_line_ft: distance_to_property_line_ft ?? null,
     sloped: obstacleInput.sloped ?? false,
     attachedToStructure: obstacleInput.attachedToStructure ?? false,
     hasTree: obstacleInput.hasTree ?? false,

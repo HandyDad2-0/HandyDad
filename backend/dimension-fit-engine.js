@@ -53,6 +53,12 @@ const OBSTACLE_NEXT_STEPS = {
  * @param {number} input.clearance_ft
  * @param {number|null} [input.entered_height_ft] - only meaningful when the
  *   project has a max_unassisted_height_ft threshold (Rule 3)
+ * @param {number|null} [input.setback_required_ft] - the user's own
+ *   confirmed local setback rule (we never look this up ourselves - see
+ *   docs/space-measurement.md "Setbacks"). Checked only when paired with
+ *   distance_to_property_line_ft; omit either one to skip the check.
+ * @param {number|null} [input.distance_to_property_line_ft] - how far the
+ *   planned spot actually is from the nearest property line.
  * @param {boolean} input.sloped
  * @param {boolean} input.attachedToStructure
  * @param {boolean} input.hasTree
@@ -111,6 +117,22 @@ export function checkFit(project, input) {
       severity: "blocking",
       text: `This project needs ${project.clearance_ft} ft of clearance to build and use safely - you entered ${input.clearance_ft} ft.`,
       nextStep: "Choose a spot with more room around it, or pick a project that needs less clearance.",
+    });
+  }
+
+  // Setback - property line distance. From docs/space-measurement.md's
+  // "Setbacks" research: setback rules are set by local zoning, not a
+  // national standard, so HandyDad never invents or assumes a number. The
+  // check only runs when the user has confirmed both their own local
+  // setback requirement and how far the planned spot actually is from the
+  // property line; if either is missing, nothing is flagged.
+  const setbackConfirmed = input.setback_required_ft != null && input.distance_to_property_line_ft != null;
+  if (setbackConfirmed && input.distance_to_property_line_ft < input.setback_required_ft) {
+    flags.push({
+      rule: "setback",
+      severity: "blocking",
+      text: `You confirmed a ${input.setback_required_ft} ft setback is required here, but this spot is only ${input.distance_to_property_line_ft} ft from the property line.`,
+      nextStep: "Move the build spot further from the property line, or re-confirm the setback rule with your city or county.",
     });
   }
 
